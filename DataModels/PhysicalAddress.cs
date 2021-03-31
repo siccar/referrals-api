@@ -11,7 +11,7 @@ namespace OpenReferrals.DataModels
         public string City { get; set; }
         public string Country { get; set; }
         public string Id { get; set; }
-        public Location Location { get; set; }
+        public string LocationId { get; set; }
         public string Postal_Code { get; set; }
         public string State_Province { get; set; }
     }

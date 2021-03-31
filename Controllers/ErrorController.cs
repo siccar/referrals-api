@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using OpenReferrals.Exceptions;
 using OpenReferrals.RegisterManagementConnector.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,15 @@ namespace OpenReferrals.Controllers
                     );
             }
 
+            if (error is HttpStatusException statusException)
+            {
+                return Problem(
+                    title: statusException.Message,
+                    statusCode: (int)statusException.Status,
+                    detail: error.StackTrace
+                );
+            }
+
             return Problem(
                 detail: context.Error.StackTrace,
                 title: context.Error.Message);
@@ -63,6 +73,14 @@ namespace OpenReferrals.Controllers
                     title: siccarException.Message,
                     statusCode: (int)siccarException.Status
                     );
+            }
+
+            if (error is HttpStatusException statusException)
+            {
+                return Problem(
+                    title: statusException.Message,
+                    statusCode: (int)statusException.Status
+                );
             }
 
             return Problem();

@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
@@ -10,6 +9,7 @@ using Polly;
 using OpenReferrals.RegisterManagementConnector.Configuration;
 using OpenReferrals.Policies.HttpPolicies;
 using OpenReferrals.RegisterManagementConnector.Exceptions;
+using Newtonsoft.Json;
 
 namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 {

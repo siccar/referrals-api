@@ -13,12 +13,6 @@ namespace OpenReferrals.Controllers
     [Route("[controller]")]
     public class OrganizationsController : ControllerBase
     {
-        private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
-        public OrganizationsController(IRegisterManagmentServiceClient registerManagmentServiceClient)
-        {
-            _registerManagmentServiceClient = registerManagmentServiceClient;
-        }
-
         [HttpGet]
         public IEnumerable<Organisation> Get()
         {
@@ -26,11 +20,10 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] SiccarOrganisation organisation)
+        public async Task<IActionResult> Post([FromBody] Organisation organisation)
         {
-            var result = await _registerManagmentServiceClient.CreateOrganisation(organisation);
-            return Accepted(result);
-        }
+            throw new NotImplementedException();
+        } 
 
         [HttpGet]
         [Route("{id}")]

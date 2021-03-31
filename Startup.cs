@@ -13,6 +13,7 @@ using System.IO;
 using OpenReferrals.RegisterManagementConnector.Extensions;
 using OpenReferrals.RegisterManagementConnector.Configuration;
 using System.Text.Json.Serialization;
+using OpenReferrals.Repositories.Configuration;
 
 namespace OpenReferrals
 {
@@ -31,9 +32,17 @@ namespace OpenReferrals
             services.AddControllers();
             //InjectAuth(services); Not currently working
 
+
+            var storageAccountOptions = new StorageAccountOptions();
+            Configuration.Bind("ConnectionStrings", storageAccountOptions);
+            services.AddSingleton(storageAccountOptions);
+
+
             var registerOptions = new RegisterManagmentOptions();
             Configuration.Bind("RegisterManagementAPI", registerOptions);
             services.InjectRegisterManagementServiceClient(registerOptions);
+
+
             ApplySwaggerGen(services);
         }
 
