@@ -36,29 +36,8 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpGet]
-        [Route("{id}/richness")]
-        public Ratings GetRichness(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
         [Route("{id}/validate")]
         public string Validate (string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
-        [Route("richness")]
-        public IEnumerable<Ratings> RichnessSelectionServices(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpPost]
-        [Route("richness")]
-        public Ratings RichnessSingleServices(string id)
         {
             throw new NotImplementedException();
         }
