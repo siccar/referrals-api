@@ -7,7 +7,6 @@ namespace OpenReferrals.DataModels
 {
     public class Eligibility
     {
-        public string Eligibiliti { get; set; }
         public string Id { get; set; }
         public string LinkId { get; set; }
         public float Maximum_Age { get; set; }
