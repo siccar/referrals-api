@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OpenReferrals.DataModels;
+using OpenReferrals.RegisterManagementConnector.Models;
+using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OpenReferrals.Controllers
 {
@@ -9,6 +13,12 @@ namespace OpenReferrals.Controllers
     [Route("[controller]")]
     public class OrganizationsController : ControllerBase
     {
+        private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
+        public OrganizationsController(IRegisterManagmentServiceClient registerManagmentServiceClient)
+        {
+            _registerManagmentServiceClient = registerManagmentServiceClient;
+        }
+
         [HttpGet]
         public IEnumerable<Organisation> Get()
         {
@@ -16,9 +26,10 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpPost]
-        public IEnumerable<Organisation> Post()
+        public async Task<IActionResult> Post([FromBody] SiccarOrganisation organisation)
         {
-            throw new NotImplementedException();
+            var result = await _registerManagmentServiceClient.CreateOrganisation(organisation);
+            return Accepted(result);
         }
 
         [HttpGet]
