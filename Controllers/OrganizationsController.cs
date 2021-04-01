@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.Models;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
+using OpenReferrals.Repositories.OpenReferral;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,30 +14,47 @@ namespace OpenReferrals.Controllers
     [Route("[controller]")]
     public class OrganizationsController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<Organisation> Get()
+
+        private readonly IOrganisationRepository _orgRepository;
+        private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
+        public OrganizationsController(
+            IOrganisationRepository orgRepository,
+            IRegisterManagmentServiceClient registerManagmentServiceClient
+            )
         {
-            throw new NotImplementedException();
+            _orgRepository = orgRepository;
+            _registerManagmentServiceClient = registerManagmentServiceClient;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var orgs = _orgRepository.GetAll();
+            return Ok(orgs);
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Organisation organisation)
         {
-            throw new NotImplementedException();
-        } 
+            var publishedOrg = await _registerManagmentServiceClient.CreateOrganisation(organisation);
+            await _orgRepository.InsertOne(publishedOrg);
+            return Accepted(publishedOrg);
+        }
 
         [HttpGet]
         [Route("{id}")]
-        public IEnumerable<Organisation> Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            throw new NotImplementedException();
+            var org = await _orgRepository.FindById(id);
+            return Ok(org);
         }
 
         [HttpPut]
         [Route("{id}")]
-        public IEnumerable<Organisation> Put(string id)
+        public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Organisation organisation)
         {
-            throw new NotImplementedException();
+            await _orgRepository.UpdateOne(organisation);
+            return Ok();
         }
     }
 }

@@ -14,6 +14,8 @@ using OpenReferrals.RegisterManagementConnector.Extensions;
 using OpenReferrals.RegisterManagementConnector.Configuration;
 using System.Text.Json.Serialization;
 using OpenReferrals.Repositories.Configuration;
+using OpenReferrals.Repositories.Common;
+using OpenReferrals.Repositories.OpenReferral;
 
 namespace OpenReferrals
 {
@@ -33,9 +35,12 @@ namespace OpenReferrals
             //InjectAuth(services); Not currently working
 
 
-            var storageAccountOptions = new StorageAccountOptions();
-            Configuration.Bind("ConnectionStrings", storageAccountOptions);
-            services.AddSingleton(storageAccountOptions);
+            var mongoOptions = new MongoDbSettings();
+            Configuration.Bind("MongoDbSettings", mongoOptions);
+            services.AddSingleton(mongoOptions);
+
+            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+            services.AddTransient<IOrganisationRepository, OrganisationRepository>();
 
 
             var registerOptions = new RegisterManagmentOptions();

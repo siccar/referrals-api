@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace OpenReferrals.Repositories.Configuration
 {
-    public class StorageAccountOptions
+    public class MongoDbSettings
     {
-        public string StorageConnection { get; set; }
+        public string DatabaseName { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

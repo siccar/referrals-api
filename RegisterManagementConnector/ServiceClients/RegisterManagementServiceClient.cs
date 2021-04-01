@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.Configuration;
 using OpenReferrals.RegisterManagementConnector.Models;
 using System;
@@ -18,13 +19,21 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             _httpClient = httpClient;
         }
 
-        public async Task<SiccarOrganisation> CreateOrganisation(SiccarOrganisation SiccarOrganisation)
+        public async Task<Organisation> CreateOrganisation(Organisation SiccarOrganisation)
         {
-            var endpoint = new Uri($"{_options.BaseUrl}/OpenReferrals");
+            // This is the point at which we'll send the data to Siccar
+            // Siccar will create a group/wallet, add the user to the group, start the process, and submit the organisations data. 
+            // We then use the process instanceId as the organisations id. 
 
-            var result = await _httpClient.RegisterPostRequest(endpoint, SiccarOrganisation);
+            //TODO Convert to a SiccarOrganisation then publish to siccar
+            //var endpoint = new Uri($"{_options.BaseUrl}/OpenReferrals");
 
-            return JsonConvert.DeserializeObject<SiccarOrganisation>(result);
+            //var result = await _httpClient.RegisterPostRequest(endpoint, SiccarOrganisation);
+
+            //return JsonConvert.DeserializeObject<SiccarOrganisation>(result);
+
+            SiccarOrganisation.Id = Guid.NewGuid().ToString("N");
+            return SiccarOrganisation;
         }
     }
 }

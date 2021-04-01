@@ -1,4 +1,5 @@
-﻿using OpenReferrals.RegisterManagementConnector.Models;
+﻿using OpenReferrals.DataModels;
+using OpenReferrals.RegisterManagementConnector.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 {
     public interface IRegisterManagmentServiceClient
     {
-        Task<SiccarOrganisation> CreateOrganisation(SiccarOrganisation organisation);
+        Task<Organisation> CreateOrganisation(Organisation organisation);
     }
 }
