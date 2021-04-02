@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace OpenReferrals.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class OrganizationsController : ControllerBase
     {

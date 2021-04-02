@@ -16,6 +16,7 @@ using System.Text.Json.Serialization;
 using OpenReferrals.Repositories.Configuration;
 using OpenReferrals.Repositories.Common;
 using OpenReferrals.Repositories.OpenReferral;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace OpenReferrals
 {
@@ -32,7 +33,7 @@ namespace OpenReferrals
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //InjectAuth(services); Not currently working
+            InjectAuth(services);
 
 
             var mongoOptions = new MongoDbSettings();
@@ -82,14 +83,12 @@ namespace OpenReferrals
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(options =>
-                {
-                    Configuration.Bind("AzureAdB2C", options);
-                    options.TokenValidationParameters.NameClaimType = "name";
-                },
-                options =>
-                {
-                    Configuration.Bind("AzureAdB2C", options);
-                });
+        {
+            Configuration.Bind("AzureAdB2C", options);
+
+            options.TokenValidationParameters.NameClaimType = "name";
+        },
+            options => { Configuration.Bind("AzureAdB2C", options); });
         }
 
         private void ApplySwaggerGen(IServiceCollection services)

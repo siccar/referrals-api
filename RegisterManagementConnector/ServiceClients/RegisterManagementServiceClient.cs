@@ -19,7 +19,7 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             _httpClient = httpClient;
         }
 
-        public async Task<Organisation> CreateOrganisation(Organisation SiccarOrganisation)
+        public async Task<Organisation> CreateOrganisation(Organisation organisation)
         {
             // This is the point at which we'll send the data to Siccar
             // Siccar will create a group/wallet, add the user to the group, start the process, and submit the organisations data. 
@@ -27,13 +27,14 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 
             //TODO Convert to a SiccarOrganisation then publish to siccar
             //var endpoint = new Uri($"{_options.BaseUrl}/OpenReferrals");
+            //var siccarOrg = new SiccarOrganisation(organisation);
 
-            //var result = await _httpClient.RegisterPostRequest(endpoint, SiccarOrganisation);
+            //var result = await _httpClient.RegisterPostRequest(endpoint, organisation);
 
-            //return JsonConvert.DeserializeObject<SiccarOrganisation>(result);
+            //return JsonConvert.DeserializeObject<Organisation>(result);
 
-            SiccarOrganisation.Id = Guid.NewGuid().ToString("N");
-            return SiccarOrganisation;
+            organisation.Id = Guid.NewGuid().ToString("N");
+            return organisation;
         }
     }
 }

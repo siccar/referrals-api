@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Threading.Tasks;
 using IHttpClientFactory = System.Net.Http.IHttpClientFactory;
 using Microsoft.Extensions.Logging;
@@ -10,21 +9,37 @@ using OpenReferrals.RegisterManagementConnector.Configuration;
 using OpenReferrals.Policies.HttpPolicies;
 using OpenReferrals.RegisterManagementConnector.Exceptions;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Web;
+using System.Diagnostics;
 
 namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 {
     public class HttpClientAdapter : IHttpClientAdapter
     {
         private readonly HttpClient _httpClient;
-        private readonly RegisterManagmentOptions _registerOptions;
         private readonly ILogger<HttpClientAdapter> _logger;
+        private readonly string _RegisterScope = string.Empty;
+        private readonly string _UserScope = string.Empty;
+        //private readonly ITokenAcquisition _tokenAcquisition;
 
-        public HttpClientAdapter(ILogger<HttpClientAdapter> logger, IHttpClientFactory httpClientFactory, RegisterManagmentOptions siccarOptions)
+
+
+        public HttpClientAdapter(
+            ILogger<HttpClientAdapter> logger,
+            IHttpClientFactory httpClientFactory,
+            IConfiguration configuration
+            //ITokenAcquisition tokenAcquisition
+            )
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient(PolicyNames.RegisterHttpClient);
             _httpClient.Timeout = TimeSpan.FromMinutes(10);
-            _registerOptions = siccarOptions;
+            _RegisterScope = configuration["Scopes:Register"];
+            _UserScope = configuration["Scopes:UserManagement"];
+            //_tokenAcquisition = tokenAcquisition;
+
         }
 
         public async Task<string> RegisterGetRequest(Uri endpoint)
@@ -74,22 +89,27 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             //var token = await authContext.AcquireTokenAsync(_registerOptions.ResourceUri, credentials);
             //message.Headers.Add("Authorization", $"Bearer {token.AccessToken}");
 
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri($"https://login.microsoftonline.com/{_registerOptions.TenantID}")
-            };
-            var content = new StringContent(
-                JsonConvert.SerializeObject(
-                    new
-                    {
-                        client_id = _registerOptions.ClientId,
-                        client_secret = _registerOptions.ClientSecret,
-                        scope = _registerOptions.ResourceUri + ".default",
-                        grant_type = "client_credentials"
-                    }), Encoding.UTF8, "application/json");
+            //var client = new HttpClient
+            //{
+            //    BaseAddress = new Uri($"https://login.microsoftonline.com/{_registerOptions.TenantID}/")
+            //};
+            //var content = new StringContent(
+            //    JsonConvert.SerializeObject(
+            //        new
+            //        {
+            //            client_id = _registerOptions.ClientId,
+            //            client_secret = _registerOptions.ClientSecret,
+            //            scope = _registerOptions.ResourceUri + "/.defualt",
+            //            grant_type = "client_credentials"
+            //        }), Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("oauth2/v2.0/token", content);
-            var tokenResponse = await response.Content.ReadAsStringAsync();
+            //var response = await client.PostAsync("oauth2/v2.0/token", content);
+            //var tokenResponse = await response.Content.ReadAsStringAsync();
+
+            //var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(new[] { _RegisterScope, _UserScope });
+            //Debug.WriteLine($"access token-{accessToken}");
+            //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            //_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
     }
 }

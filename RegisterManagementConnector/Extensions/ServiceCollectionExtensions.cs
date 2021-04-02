@@ -13,7 +13,7 @@ namespace OpenReferrals.RegisterManagementConnector.Extensions
             services.AddHttpClient<IHttpClientAdapter, HttpClientAdapter>(PolicyNames.RegisterHttpClient)
                 .AddPolicyHandler(HttpPolicies.GetRetryPolicy());
             services.AddSingleton(options);
-            services.AddSingleton<IHttpClientAdapter, HttpClientAdapter>();
+            services.AddTransient<IHttpClientAdapter, HttpClientAdapter>();
             services.AddTransient<IRegisterManagmentServiceClient, RegisterManagementServiceClient>();
             return services;
         }
