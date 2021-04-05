@@ -85,8 +85,9 @@ namespace OpenReferrals.Controllers
         {
             if (IsCallingUserIsKeyContact(request))
             {
-                var orgmemberRequest = new OrganisationMember() { OrgId = orgId, Status = status, UserId = userId };
-                await  _orgRepository.UpdateOne(orgmemberRequest);
+                var orgmember = await _orgRepository.Find(orgId, userId);
+                orgmember.Status = status;
+                await  _orgRepository.UpdateOne(orgmember);
                 return Ok();
             }
             return new UnauthorizedObjectResult("Only Key contacts call call this method");

@@ -13,5 +13,7 @@ namespace OpenReferrals.Repositories.OpenReferral
         IEnumerable<OrganisationMember> GetAllMembers(string orgId);
 
         IEnumerable<OrganisationMember> GetAllPendingRequests(string orgId);
+
+        Task<OrganisationMember> Find(string orgId, string userId);
     }
 }
