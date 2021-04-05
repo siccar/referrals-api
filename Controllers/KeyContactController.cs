@@ -37,7 +37,7 @@ namespace OpenReferrals.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("{orgId}")]
         public async Task<IActionResult> DeleteOrgKeyContacts([FromRoute] string orgId)
         {
