@@ -6,13 +6,13 @@ using IHttpClientFactory = System.Net.Http.IHttpClientFactory;
 using Microsoft.Extensions.Logging;
 using Polly;
 using OpenReferrals.RegisterManagementConnector.Configuration;
-using OpenReferrals.Policies.HttpPolicies;
 using OpenReferrals.RegisterManagementConnector.Exceptions;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 {
@@ -22,23 +22,23 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
         private readonly ILogger<HttpClientAdapter> _logger;
         private readonly string _RegisterScope = string.Empty;
         private readonly string _UserScope = string.Empty;
-        //private readonly ITokenAcquisition _tokenAcquisition;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
 
         public HttpClientAdapter(
             ILogger<HttpClientAdapter> logger,
             IHttpClientFactory httpClientFactory,
-            IConfiguration configuration
-            //ITokenAcquisition tokenAcquisition
+            IConfiguration configuration,
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _logger = logger;
-            _httpClient = httpClientFactory.CreateClient(PolicyNames.RegisterHttpClient);
+            _httpClient = httpClientFactory.CreateClient();
             _httpClient.Timeout = TimeSpan.FromMinutes(10);
-            _RegisterScope = configuration["Scopes:Register"];
-            _UserScope = configuration["Scopes:UserManagement"];
-            //_tokenAcquisition = tokenAcquisition;
+            _RegisterScope = configuration["RegisterApi:Scopes"];
+            _UserScope = configuration["UserApi:Scopes"];
+            _httpContextAccessor = httpContextAccessor;
 
         }
 
@@ -46,8 +46,6 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
         {
             var message = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
-            var context = new Context().WithLogger<HttpClientAdapter>(_logger);
-            message.SetPolicyExecutionContext(context);
             await AddAccessTokenToRequestHeader(message);
 
             var response = await _httpClient.SendAsync(message);
@@ -106,10 +104,18 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             //var response = await client.PostAsync("oauth2/v2.0/token", content);
             //var tokenResponse = await response.Content.ReadAsStringAsync();
 
-            //var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(new[] { _RegisterScope, _UserScope });
-            //Debug.WriteLine($"access token-{accessToken}");
-            //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            //_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            try
+            {
+                var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+                accessToken = accessToken.ToString().Replace("Bearer", "").Trim();
+                Debug.WriteLine($"access token-{accessToken}");
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }
+            catch(Exception _)
+            {
+                throw;
+            }
         }
     }
 }

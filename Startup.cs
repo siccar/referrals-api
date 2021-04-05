@@ -81,14 +81,21 @@ namespace OpenReferrals
 
         private void InjectAuth(IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(options =>
-        {
-            Configuration.Bind("AzureAdB2C", options);
+            //    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //        .AddMicrosoftIdentityWebApi(options =>
+            //{
+            //    Configuration.Bind("AzureAdB2C", options);
 
-            options.TokenValidationParameters.NameClaimType = "name";
-        },
-            options => { Configuration.Bind("AzureAdB2C", options); });
+            //    options.TokenValidationParameters.NameClaimType = "name";
+            //},
+            //    options => { Configuration.Bind("AzureAdB2C", options); })
+            //        .EnableTokenAcquisitionToCallDownstreamApi()
+            //         .AddDownstreamWebApi();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(Configuration, "AzureAd")
+                .EnableTokenAcquisitionToCallDownstreamApi()
+                .AddInMemoryTokenCaches();
         }
 
         private void ApplySwaggerGen(IServiceCollection services)

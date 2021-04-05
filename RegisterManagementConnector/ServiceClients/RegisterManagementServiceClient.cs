@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Web;
+using Newtonsoft.Json;
 using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.Configuration;
 using OpenReferrals.RegisterManagementConnector.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace OpenReferrals.RegisterManagementConnector.ServiceClients
@@ -13,10 +16,12 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
     {
         private readonly RegisterManagmentOptions _options;
         private readonly IHttpClientAdapter _httpClient;
-        public RegisterManagementServiceClient(RegisterManagmentOptions options, IHttpClientAdapter httpClient)
+        private readonly IConfiguration _config;
+        public RegisterManagementServiceClient(RegisterManagmentOptions options, IHttpClientAdapter httpClient, IConfiguration config)
         {
             _options = options;
             _httpClient = httpClient;
+            _config = config;
         }
 
         public async Task<Organisation> CreateOrganisation(Organisation organisation)
@@ -26,15 +31,24 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             // We then use the process instanceId as the organisations id. 
 
             //TODO Convert to a SiccarOrganisation then publish to siccar
-            //var endpoint = new Uri($"{_options.BaseUrl}/OpenReferrals");
-            //var siccarOrg = new SiccarOrganisation(organisation);
+            var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals");
+            var siccarOrg = new SiccarOrganisation(organisation);
 
-            //var result = await _httpClient.RegisterPostRequest(endpoint, organisation);
+            var result = await _httpClient.RegisterPostRequest(endpoint, siccarOrg);
 
-            //return JsonConvert.DeserializeObject<Organisation>(result);
+            return JsonConvert.DeserializeObject<Organisation>(result);
 
-            organisation.Id = Guid.NewGuid().ToString("N");
-            return organisation;
+            //var value = await _downStreamWebApi.CallWebApiForUserAsync<SiccarOrganisation, Organisation>(
+            //     "RegisterAPI",
+            //     siccarOrg,
+            //     options =>
+            //     {
+            //         options.HttpMethod = HttpMethod.Post;
+            //         options.RelativePath = $"OpenReferrals";
+            //     });
+
+            //organisation.Id = Guid.NewGuid().ToString("N");
+            //return value;
         }
     }
 }
