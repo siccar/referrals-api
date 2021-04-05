@@ -9,6 +9,8 @@ namespace OpenReferrals.Repositories.OpenReferral
     public interface IKeyContactRepository
     {
         Task InsertOne(KeyContacts contact);
+
+        Task DeleteOne(KeyContacts contact);
         Task UpdateOne(KeyContacts contact);
         Task<KeyContacts> FindByOrgId(string organisationId);
 

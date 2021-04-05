@@ -42,6 +42,7 @@ namespace OpenReferrals
 
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddTransient<IOrganisationRepository, OrganisationRepository>();
+            services.AddTransient<IKeyContactRepository, KeyContactRepository>();
 
 
             var registerOptions = new RegisterManagmentOptions();

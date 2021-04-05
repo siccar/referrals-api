@@ -1,9 +1,7 @@
 ﻿using MongoDB.Driver;
 using OpenReferrals.DataModels;
 using OpenReferrals.Repositories.Common;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenReferrals.Repositories.OpenReferral
@@ -22,9 +20,9 @@ namespace OpenReferrals.Repositories.OpenReferral
             return await _repo.FindOneAsync(x => x.OrgId == organisationId);
         }
 
-        public async Task<KeyContacts> FindByUserId(string userID)
+        public async Task<KeyContacts> FindByUserId(string userId)
         {
-            return await _repo.FindOneAsync(x => x.UserId == userID);
+            return await _repo.FindOneAsync(x => x.UserId == userId);
         }
 
         public IEnumerable<KeyContacts> GetAll()
@@ -36,6 +34,11 @@ namespace OpenReferrals.Repositories.OpenReferral
         public async Task InsertOne(KeyContacts contact)
         {
             await _repo.InsertOneAsync(contact);
+        }
+
+        public async Task DeleteOne(KeyContacts contact)
+        {
+            await _repo.DeleteOneAsync(x => x.OrgId == contact.OrgId && x.UserId == contact.UserId);
         }
 
         public async Task UpdateOne(KeyContacts contact)
