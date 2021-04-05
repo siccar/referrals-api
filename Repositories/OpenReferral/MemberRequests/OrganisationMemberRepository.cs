@@ -20,7 +20,7 @@ namespace OpenReferrals.Repositories.OpenReferral
 
         public IEnumerable<OrganisationMember> GetAllMembers(string orgId)
         {
-            return _repo.FilterBy(x => x.OrgId == orgId);
+            return _repo.FilterBy(x => x.OrgId == orgId && x.Status == OrganisationMembersStatus.JOINED);
         }
 
         public IEnumerable<OrganisationMember> GetAllPendingRequests(string orgId)

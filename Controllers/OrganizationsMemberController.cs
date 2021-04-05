@@ -35,59 +35,59 @@ namespace OpenReferrals.Controllers
 
         [HttpGet]
         [Route("create/{orgId}")]
-        public IActionResult CreateRequest([FromRoute] string orgId)
+        public async Task<IActionResult> CreateRequest([FromRoute] string orgId)
         {
             var orgmemberRequest = new OrganisationMember() { Id = Guid.NewGuid().ToString(), OrgId = orgId, Status = OrganisationMembersStatus.REQUESTED, UserId = JWTAttributesService.GetSubject(Request) };
-            return Ok(_orgRepository.InsertOne(orgmemberRequest));
+            await _orgRepository.InsertOne(orgmemberRequest);
+            return Ok();
         }
-
-
 
         [HttpGet]
         [Route("pending/{orgId}")]
         public IActionResult GetAllPendingRequests([FromRoute] string orgId)
         {
-            var keycontactUserId = JWTAttributesService.GetSubject(Request);
-            return Ok(_orgRepository.GetAllPendingRequests(keycontactUserId));
+            var requests = _orgRepository.GetAllPendingRequests(orgId);
+            return Ok(requests);
         }
 
         [HttpGet]
         [Route("all/{orgId}")]
         public IActionResult GetALlMembers([FromRoute] string orgId)
-        {
-            var keycontactUserId = JWTAttributesService.GetSubject(Request);
-            return Ok(_orgRepository.GetAllMembers(keycontactUserId));
+        {            
+            var requests = _orgRepository.GetAllMembers(orgId);
+            return Ok(requests);
         }
 
 
         [HttpGet]
         [Route("grant/{orgId}/{userId}")]
-        public IActionResult GrantAccess([FromRoute] string orgId, [FromRoute] string userId)
+        public async Task<IActionResult> GrantAccess([FromRoute] string orgId, [FromRoute] string userId)
         {
-            return UpdateUser(Request, orgId, userId, OrganisationMembersStatus.JOINED);
+            return await UpdateUser(Request, orgId, userId, OrganisationMembersStatus.JOINED);
 
         }
 
         [HttpGet]
         [Route("revoke/{orgId}/{userId}")]
-        public IActionResult RevokeAccess([FromRoute] string orgId, [FromRoute] string userId)
+        public async Task<IActionResult> RevokeAccess([FromRoute] string orgId, [FromRoute] string userId)
         {
-            return UpdateUser(Request, orgId, userId, OrganisationMembersStatus.REVOKED);
+            return await UpdateUser(Request, orgId, userId, OrganisationMembersStatus.REVOKED);
         }
 
         [HttpGet]
         [Route("deny/{orgId}/{userId}")]
-        public IActionResult DenyAccess([FromRoute] string orgId, [FromRoute] string userId)
+        public async Task<IActionResult> DenyAccess([FromRoute] string orgId, [FromRoute] string userId)
         {
-            return UpdateUser(Request, orgId, userId, OrganisationMembersStatus.DENIED);
+            return await UpdateUser(Request, orgId, userId, OrganisationMembersStatus.DENIED);
         }
 
-        private IActionResult UpdateUser(HttpRequest request, string orgId, string userId, OrganisationMembersStatus status)
+        private async Task<IActionResult> UpdateUser(HttpRequest request, string orgId, string userId, OrganisationMembersStatus status)
         {
             if (IsCallingUserIsKeyContact(request))
             {
                 var orgmemberRequest = new OrganisationMember() { OrgId = orgId, Status = status, UserId = userId };
-                return Ok(_orgRepository.UpdateOne(orgmemberRequest));
+                await  _orgRepository.UpdateOne(orgmemberRequest);
+                return Ok();
             }
             return new UnauthorizedObjectResult("Only Key contacts call call this method");
         }
