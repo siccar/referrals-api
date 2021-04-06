@@ -16,5 +16,9 @@ namespace OpenReferrals.DataModels
 
         public string UserId  { get; set; }
         public string UserEmail { get; set; }
+
+        public bool IsAdmin { get; set; }
+
+        public bool IsPending { get; set; }
     }
 }

@@ -144,7 +144,7 @@ namespace OpenReferrals.Controllers
         private async Task<bool> IsCallingUserIsKeyContact(HttpRequest request)
         {
             var userId = JWTAttributesService.GetSubject(request);
-            var exists = (await _keyContactRepo.FindByUserId(userId)).ToList();
+            var exists = (await _keyContactRepo.FindByUserId(userId)).ToList().Where(x => x.IsPending = false).ToList();
             return exists.Count > 0;
         }
     }

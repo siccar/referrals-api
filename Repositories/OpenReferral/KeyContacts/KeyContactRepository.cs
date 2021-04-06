@@ -28,7 +28,11 @@ namespace OpenReferrals.Repositories.OpenReferral
         public IEnumerable<KeyContacts> GetAll()
         {
             return _repo.FilterBy(_ => true);
+        }
 
+        public async Task<KeyContacts> GetKeyContact(string orgId, string userId)
+        {
+            return await _repo.FindOneAsync(x => x.OrgId == orgId && x.UserId == userId);
         }
 
         public async Task InsertOne(KeyContacts contact)
