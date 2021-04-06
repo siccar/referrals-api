@@ -8,6 +8,7 @@ using OpenReferrals.Repositories.OpenReferral;
 using OpenReferrals.Sevices;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenReferrals.Controllers
@@ -54,8 +55,16 @@ namespace OpenReferrals.Controllers
         [Route("create/{orgId}")]
         public async Task<IActionResult> CreateRequest([FromRoute] string orgId)
         {
-            var orgmemberRequest = new OrganisationMember() { Id = Guid.NewGuid().ToString(), OrgId = orgId, Status = OrganisationMembersStatus.REQUESTED, UserId = JWTAttributesService.GetSubject(Request) };
-            await _orgRepository.InsertOne(orgmemberRequest);
+            // Restricts the requests so you only get one request per org per user ID
+            var userId = JWTAttributesService.GetSubject(Request);
+            var existingRequestsForUser = _orgRepository.GetRequestsAboutUser(userId).Where(x => x.OrgId == orgId);
+            if (existingRequestsForUser.Count() == 0)
+            {
+                var orgmemberRequest = new OrganisationMember() { Id = Guid.NewGuid().ToString(), OrgId = orgId, Status = OrganisationMembersStatus.REQUESTED, UserId = userId };
+                await _orgRepository.InsertOne(orgmemberRequest);
+            }
+
+
             return Ok();
         }
 
