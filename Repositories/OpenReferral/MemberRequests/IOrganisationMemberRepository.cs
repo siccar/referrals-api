@@ -12,6 +12,8 @@ namespace OpenReferrals.Repositories.OpenReferral
         Task UpdateOne(OrganisationMember member);
         IEnumerable<OrganisationMember> GetAllMembers(string orgId);
 
+        IEnumerable<OrganisationMember> GetRequestsAboutUser(string userId);
+
         IEnumerable<OrganisationMember> GetAllPendingRequests(string orgId);
 
         Task<OrganisationMember> Find(string orgId, string userId);

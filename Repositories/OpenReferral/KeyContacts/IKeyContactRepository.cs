@@ -14,7 +14,8 @@ namespace OpenReferrals.Repositories.OpenReferral
         Task UpdateOne(KeyContacts contact);
         Task<KeyContacts> FindByOrgId(string organisationId);
 
-        Task<KeyContacts> FindByUserId(string userID);
+        Task<KeyContacts> FindByUserId(string userId);
+
         IEnumerable<KeyContacts> GetAll();
     }
 }

@@ -27,10 +27,27 @@ namespace OpenReferrals.Controllers
             IOrganisationMemberRepository orgRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient
             )
-        {
+        { 
             _orgRepository = orgRepository;
             _keyContactRepo = keyContactRepo;
             _registerManagmentServiceClient = registerManagmentServiceClient;
+        }
+
+        [HttpGet]
+        [Route("my/requests")]
+        public async Task<IActionResult> FetchRequestsAboutMe()
+        {
+            var userId = JWTAttributesService.GetSubject(Request);
+            return Ok(_orgRepository.GetRequestsAboutUser(userId));
+        }
+
+        [HttpGet]
+        [Route("admin/requests")]
+        public async Task<IActionResult> FetchAdminRequests()
+        {
+            var userId = JWTAttributesService.GetSubject(Request);
+            var org = await _keyContactRepo.FindByUserId(userId);
+            return Ok(_orgRepository.GetAllPendingRequests(org.OrgId));
         }
 
         [HttpGet]

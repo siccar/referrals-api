@@ -23,6 +23,11 @@ namespace OpenReferrals.Repositories.OpenReferral
             return _repo.FilterBy(x => x.OrgId == orgId && x.Status == OrganisationMembersStatus.JOINED);
         }
 
+        public IEnumerable<OrganisationMember> GetRequestsAboutUser(string userId)
+        {
+            return _repo.FilterBy(x => x.UserId == userId);
+        }
+
         public async Task<OrganisationMember> Find(string orgId, string userId)
         {
             return await _repo.FindOneAsync(x => x.OrgId == orgId && x.UserId == userId);
