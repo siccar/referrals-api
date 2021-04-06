@@ -93,7 +93,7 @@ namespace OpenReferrals
             //         .AddDownstreamWebApi();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration, "AzureAd")
+                .AddMicrosoftIdentityWebApi(Configuration, "AzureAdB2C")
                 .EnableTokenAcquisitionToCallDownstreamApi()
                 .AddInMemoryTokenCaches();
         }
