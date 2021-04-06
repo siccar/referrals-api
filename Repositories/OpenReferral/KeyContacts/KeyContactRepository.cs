@@ -15,14 +15,14 @@ namespace OpenReferrals.Repositories.OpenReferral
             _repo = repo;
         }
 
-        public async Task<KeyContacts> FindByOrgId(string organisationId)
+        public async Task<IEnumerable<KeyContacts>> FindByOrgId(string organisationId)
         {
-            return await _repo.FindOneAsync(x => x.OrgId == organisationId);
+            return _repo.FilterBy(x => x.OrgId == organisationId);
         }
 
-        public async Task<KeyContacts> FindByUserId(string userId)
+        public async Task<IEnumerable<KeyContacts>> FindByUserId(string userId)
         {
-            return await _repo.FindOneAsync(x => x.UserId == userId);
+            return _repo.FilterBy(x => x.UserId == userId);
         }
 
         public IEnumerable<KeyContacts> GetAll()

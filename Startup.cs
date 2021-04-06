@@ -17,6 +17,7 @@ using OpenReferrals.Repositories.Configuration;
 using OpenReferrals.Repositories.Common;
 using OpenReferrals.Repositories.OpenReferral;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using OpenReferrals.Sendgrid;
 
 namespace OpenReferrals
 {
@@ -40,11 +41,18 @@ namespace OpenReferrals
             Configuration.Bind("MongoDbSettings", mongoOptions);
             services.AddSingleton(mongoOptions);
 
+
+            var sendgridsettings = new SendGridSettings();
+            Configuration.Bind("Sendgrid", sendgridsettings);
+            services.AddSingleton(sendgridsettings);
+
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddTransient<IOrganisationRepository, OrganisationRepository>();
             services.AddTransient<IKeyContactRepository, KeyContactRepository>();
             services.AddTransient<IOrganisationMemberRepository, OrganisationMemberRepository>();
 
+
+            services.AddTransient<ISendGridSender>(x => new SendGridSender(sendgridsettings.ApiKey, sendgridsettings.TemplateId));
 
             var registerOptions = new RegisterManagmentOptions();
             Configuration.Bind("RegisterManagementAPI", registerOptions);

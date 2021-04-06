@@ -5,6 +5,7 @@ using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.Models;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
+using OpenReferrals.Sendgrid;
 using OpenReferrals.Sevices;
 using System;
 using System.Collections.Generic;
@@ -19,19 +20,23 @@ namespace OpenReferrals.Controllers
     public class OrganizationMemberController : ControllerBase
     {
 
-        private readonly IOrganisationMemberRepository _orgRepository;
+        private readonly IOrganisationRepository _orgRepository;
+        private readonly IOrganisationMemberRepository _orgMemberRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly IKeyContactRepository _keyContactRepo;
+        private readonly ISendGridSender _sendgridSender;
 
         public OrganizationMemberController(
             IKeyContactRepository keyContactRepo,
-            IOrganisationMemberRepository orgRepository,
-            IRegisterManagmentServiceClient registerManagmentServiceClient
+            IOrganisationMemberRepository orgMemberRepository,
+            IRegisterManagmentServiceClient registerManagmentServiceClient,
+            ISendGridSender sendgridSender
             )
-        { 
-            _orgRepository = orgRepository;
+        {
+            _orgMemberRepository = orgMemberRepository;
             _keyContactRepo = keyContactRepo;
             _registerManagmentServiceClient = registerManagmentServiceClient;
+            _sendgridSender = sendgridSender;
         }
 
         [HttpGet]
@@ -39,7 +44,7 @@ namespace OpenReferrals.Controllers
         public async Task<IActionResult> FetchRequestsAboutMe()
         {
             var userId = JWTAttributesService.GetSubject(Request);
-            return Ok(_orgRepository.GetRequestsAboutUser(userId));
+            return Ok(_orgMemberRepository.GetRequestsAboutUser(userId));
         }
 
         [HttpGet]
@@ -47,8 +52,13 @@ namespace OpenReferrals.Controllers
         public async Task<IActionResult> FetchAdminRequests()
         {
             var userId = JWTAttributesService.GetSubject(Request);
-            var org = await _keyContactRepo.FindByUserId(userId);
-            return Ok(_orgRepository.GetAllPendingRequests(org.OrgId));
+            var orgs = await _keyContactRepo.FindByUserId(userId);
+            var pendingrequests = new List<OrganisationMember>();
+            foreach (var o in orgs)
+            {
+                pendingrequests.AddRange(_orgMemberRepository.GetAllPendingRequests(o.OrgId));
+            }
+            return Ok();
         }
 
         [HttpGet]
@@ -57,13 +67,25 @@ namespace OpenReferrals.Controllers
         {
             // Restricts the requests so you only get one request per org per user ID
             var userId = JWTAttributesService.GetSubject(Request);
-            var existingRequestsForUser = _orgRepository.GetRequestsAboutUser(userId).Where(x => x.OrgId == orgId);
+            var existingRequestsForUser = _orgMemberRepository.GetRequestsAboutUser(userId).Where(x => x.OrgId == orgId);
             if (existingRequestsForUser.Count() == 0)
             {
                 var orgmemberRequest = new OrganisationMember() { Id = Guid.NewGuid().ToString(), OrgId = orgId, Status = OrganisationMembersStatus.REQUESTED, UserId = userId };
-                await _orgRepository.InsertOne(orgmemberRequest);
+                await _orgMemberRepository.InsertOne(orgmemberRequest);
             }
 
+            // Get Key Contact for org 
+            var keyContacts = await _keyContactRepo.FindByOrgId(orgId);
+
+            if (keyContacts.Count() > 0)
+            {
+                foreach (var kc in keyContacts)
+                {
+                    await _sendgridSender.SendSingleTemplateEmail(
+                    new SendGrid.Helpers.Mail.EmailAddress("info@wallet.services"),
+                    new SendGrid.Helpers.Mail.EmailAddress(kc.UserEmail));
+                }
+            }
 
             return Ok();
         }
@@ -72,15 +94,15 @@ namespace OpenReferrals.Controllers
         [Route("pending/{orgId}")]
         public IActionResult GetAllPendingRequests([FromRoute] string orgId)
         {
-            var requests = _orgRepository.GetAllPendingRequests(orgId);
+            var requests = _orgMemberRepository.GetAllPendingRequests(orgId);
             return Ok(requests);
         }
 
         [HttpGet]
         [Route("all/{orgId}")]
         public IActionResult GetALlMembers([FromRoute] string orgId)
-        {            
-            var requests = _orgRepository.GetAllMembers(orgId);
+        {
+            var requests = _orgMemberRepository.GetAllMembers(orgId);
             return Ok(requests);
         }
 
@@ -109,21 +131,21 @@ namespace OpenReferrals.Controllers
 
         private async Task<IActionResult> UpdateUser(HttpRequest request, string orgId, string userId, OrganisationMembersStatus status)
         {
-            if (IsCallingUserIsKeyContact(request))
+            if (await IsCallingUserIsKeyContact(request))
             {
-                var orgmember = await _orgRepository.Find(orgId, userId);
+                var orgmember = await _orgMemberRepository.Find(orgId, userId);
                 orgmember.Status = status;
-                await  _orgRepository.UpdateOne(orgmember);
+                await _orgMemberRepository.UpdateOne(orgmember);
                 return Ok();
             }
             return new UnauthorizedObjectResult("Only Key contacts call call this method");
         }
 
-        private bool IsCallingUserIsKeyContact(HttpRequest request)
+        private async Task<bool> IsCallingUserIsKeyContact(HttpRequest request)
         {
             var userId = JWTAttributesService.GetSubject(request);
-            var exists = _keyContactRepo.FindByUserId(userId);
-            return exists != null;
+            var exists = (await _keyContactRepo.FindByUserId(userId)).ToList();
+            return exists.Count > 0;
         }
     }
 }

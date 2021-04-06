@@ -12,10 +12,9 @@ namespace OpenReferrals.Repositories.OpenReferral
 
         Task DeleteOne(KeyContacts contact);
         Task UpdateOne(KeyContacts contact);
-        Task<KeyContacts> FindByOrgId(string organisationId);
+        Task<IEnumerable<KeyContacts>> FindByOrgId(string organisationId);
 
-        Task<KeyContacts> FindByUserId(string userId);
-
-        IEnumerable<KeyContacts> GetAll();
+        Task<IEnumerable<KeyContacts>> FindByUserId(string userId);
+       IEnumerable<KeyContacts> GetAll();
     }
 }
