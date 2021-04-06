@@ -29,7 +29,7 @@ namespace OpenReferrals.Controllers
             _registerManagmentServiceClient = registerManagmentServiceClient;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("{orgId}")]
         public async Task<IActionResult> AddKeyContact([FromRoute] string orgId)
         {
