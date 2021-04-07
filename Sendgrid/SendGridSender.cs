@@ -32,4 +32,4 @@ namespace OpenReferrals.Sendgrid
             var response = await client.SendEmailAsync(msg);
         }
     }
-}
+}   
