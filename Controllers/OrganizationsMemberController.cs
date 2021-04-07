@@ -56,9 +56,14 @@ namespace OpenReferrals.Controllers
             var pendingrequests = new List<OrganisationMember>();
             foreach (var o in orgs)
             {
-                pendingrequests.AddRange(_orgMemberRepository.GetAllPendingRequests(o.OrgId));
+                if (!o.IsPending)
+                {
+                    pendingrequests.AddRange(_orgMemberRepository.GetAllPendingRequests(o.OrgId).Where(x => x.Status != OrganisationMembersStatus.JOINED && x.Status != OrganisationMembersStatus.DENIED));
+                }
+                
             }
-            return Ok();
+
+            return Ok(pendingrequests);
         }
 
         [HttpGet]
