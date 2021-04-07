@@ -89,6 +89,23 @@ namespace OpenReferrals.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("orgs-i-can-manage")]
+        public async Task<IActionResult> GetOrgsIAmAKeyContactFor()
+        {
+            var userId = JWTAttributesService.GetSubject(Request);
+            var responnses = await _keyContactRepository.FindByUserId(userId);
+            var nonPending =  responnses.Where(x => x.IsPending == false);
+            return Ok(nonPending);
+        }
+
+        [HttpGet]
+        [Route("orgs/{orgId}/contacts")]
+        public async Task<IActionResult> GetOrgsIAmAKeyContactFor(string orgId)
+        {
+            return Ok(await _keyContactRepository.FindByOrgId(orgId));
+        }
+
 
     }
 }
