@@ -78,32 +78,7 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
         }
 
         private async Task AddAccessTokenToRequestHeader(HttpRequestMessage message)
-        {
-            //string authority = $"https://login.microsoftonline.com/{_registerOptions.TenantID}";
-
-            //var authContext = new AuthenticationContext(authority);
-            //var credentials = new ClientCredential(_registerOptions.ClientId, _registerOptions.ClientSecret);
-
-            //var token = await authContext.AcquireTokenAsync(_registerOptions.ResourceUri, credentials);
-            //message.Headers.Add("Authorization", $"Bearer {token.AccessToken}");
-
-            //var client = new HttpClient
-            //{
-            //    BaseAddress = new Uri($"https://login.microsoftonline.com/{_registerOptions.TenantID}/")
-            //};
-            //var content = new StringContent(
-            //    JsonConvert.SerializeObject(
-            //        new
-            //        {
-            //            client_id = _registerOptions.ClientId,
-            //            client_secret = _registerOptions.ClientSecret,
-            //            scope = _registerOptions.ResourceUri + "/.defualt",
-            //            grant_type = "client_credentials"
-            //        }), Encoding.UTF8, "application/json");
-
-            //var response = await client.PostAsync("oauth2/v2.0/token", content);
-            //var tokenResponse = await response.Content.ReadAsStringAsync();
-
+        { 
             try
             {
                 var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
