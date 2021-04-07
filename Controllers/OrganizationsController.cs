@@ -37,8 +37,8 @@ namespace OpenReferrals.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Organisation organisation)
         {
-            var publishedOrg = await _registerManagmentServiceClient.CreateOrganisation(organisation);
-            //await _orgRepository.InsertOne(publishedOrg);
+            var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
+            await _orgRepository.InsertOne(publishedOrg);
             return Accepted(publishedOrg);
         }
 

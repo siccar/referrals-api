@@ -9,6 +9,6 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 {
     public interface IRegisterManagmentServiceClient
     {
-        Task<Organisation> CreateOrganisation(Organisation organisation);
+        Organisation CreateOrganisation(Organisation organisation);
     }
 }

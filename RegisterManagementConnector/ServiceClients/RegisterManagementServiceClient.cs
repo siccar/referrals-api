@@ -24,31 +24,21 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             _config = config;
         }
 
-        public async Task<Organisation> CreateOrganisation(Organisation organisation)
+        public Organisation CreateOrganisation(Organisation organisation)
         {
-            // This is the point at which we'll send the data to Siccar
-            // Siccar will create a group/wallet, add the user to the group, start the process, and submit the organisations data. 
-            // We then use the process instanceId as the organisations id. 
+            // add id to be used by siccar
+            organisation.Id = Guid.NewGuid().ToString();
 
-            //TODO Convert to a SiccarOrganisation then publish to siccar
-            var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals");
-            var siccarOrg = new SiccarOrganisation(organisation);
+            //Only connect with siccar when the app is deployed.
+            if (bool.Parse(_config["ConnectToSiccar"]))
+            {
+                // We don't await this we pray to the Siccar gods that everyting works
+                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals");
+                var siccarOrg = new SiccarOrganisation(organisation);
 
-            var result = await _httpClient.RegisterPostRequest(endpoint, siccarOrg);
-
-            return JsonConvert.DeserializeObject<Organisation>(result);
-
-            //var value = await _downStreamWebApi.CallWebApiForUserAsync<SiccarOrganisation, Organisation>(
-            //     "RegisterAPI",
-            //     siccarOrg,
-            //     options =>
-            //     {
-            //         options.HttpMethod = HttpMethod.Post;
-            //         options.RelativePath = $"OpenReferrals";
-            //     });
-
-            //organisation.Id = Guid.NewGuid().ToString("N");
-            //return value;
+                _httpClient.RegisterPostRequest(endpoint, siccarOrg);
+            }
+            return organisation;
         }
     }
 }
