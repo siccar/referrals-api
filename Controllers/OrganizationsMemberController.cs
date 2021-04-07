@@ -67,10 +67,11 @@ namespace OpenReferrals.Controllers
         {
             // Restricts the requests so you only get one request per org per user ID
             var userId = JWTAttributesService.GetSubject(Request);
+            var email = JWTAttributesService.GetEmail(Request);
             var existingRequestsForUser = _orgMemberRepository.GetRequestsAboutUser(userId).Where(x => x.OrgId == orgId);
             if (existingRequestsForUser.Count() == 0)
             {
-                var orgmemberRequest = new OrganisationMember() { Id = Guid.NewGuid().ToString(), OrgId = orgId, Status = OrganisationMembersStatus.REQUESTED, UserId = userId };
+                var orgmemberRequest = new OrganisationMember() { Id = Guid.NewGuid().ToString(), OrgId = orgId, Status = OrganisationMembersStatus.REQUESTED, UserId = userId, Email = email };
                 await _orgMemberRepository.InsertOne(orgmemberRequest);
             }
 

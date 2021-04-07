@@ -17,6 +17,7 @@ namespace OpenReferrals.DataModels
 
         public string OrgId { get; set; }
 
+        public string Email { get; set; }
         public OrganisationMembersStatus Status { get; set; }
     }
 }
