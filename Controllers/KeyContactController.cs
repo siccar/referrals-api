@@ -38,6 +38,7 @@ namespace OpenReferrals.Controllers
             return Ok();
         }
 
+
         [HttpGet]
         [Route("admin/{orgId}")]
         public async Task<IActionResult> AddAdminRequestToKeyContact([FromRoute] string orgId)
@@ -74,10 +75,10 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpDelete]
-        [Route("{orgId}")]
-        public async Task<IActionResult> DeleteOrgKeyContacts([FromRoute] string orgId)
+        [Route("delete")]
+        public async Task<IActionResult> DeleteOrgKeyContacts([FromBody] KeyContacts contact)
         {
-            await _keyContactRepository.DeleteOne(new KeyContacts() { Id = Guid.NewGuid().ToString(), OrgId = orgId, UserId = JWTAttributesService.GetSubject(Request), UserEmail = JWTAttributesService.GetEmail(Request) });
+            await _keyContactRepository.DeleteOne(contact);
             return Ok();
         }
 
