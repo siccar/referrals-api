@@ -24,9 +24,10 @@ namespace OpenReferrals.Repositories.OpenReferral
 
         public async Task InsertOrUpdateOne(Playlist playList)
         {
-            var x = _repo.FindOneAsync(x => x.UserId == playList.UserId);
+            var x = await _repo.FindOneAsync(x => x.UserId == playList.UserId);
             if (x == null )
             {
+                playList.Id = Guid.NewGuid().ToString();
                 await _repo.InsertOneAsync(playList);
             }
             else

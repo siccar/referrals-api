@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenReferrals.DataModels;
-using OpenReferrals.RegisterManagementConnector.Models;
-using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
-using System;
-using System.Collections.Generic;
+using OpenReferrals.Sevices;
 using System.Threading.Tasks;
 
 namespace OpenReferrals.Controllers
@@ -23,10 +20,10 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpGet]
-        [Route("{userId}")]
-        public IActionResult Get(string userId)
+        public async Task<IActionResult> Get()
         {
-            var playList = _playListRepo.FindById(userId);
+            var userId = JWTAttributesService.GetSubject(Request);
+            var playList = await _playListRepo.FindById(userId);
             return Ok(playList);
         }
 

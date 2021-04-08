@@ -50,6 +50,7 @@ namespace OpenReferrals
             services.AddTransient<IOrganisationRepository, OrganisationRepository>();
             services.AddTransient<IKeyContactRepository, KeyContactRepository>();
             services.AddTransient<IOrganisationMemberRepository, OrganisationMemberRepository>();
+            services.AddTransient<IPlaylistRepository, PlaylistRepository>();
 
 
             services.AddTransient<ISendGridSender, SendGridSender>();
