@@ -10,5 +10,6 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
     public interface IRegisterManagmentServiceClient
     {
         Organisation CreateOrganisation(Organisation organisation);
+        Organisation UpdateOrganisation(Organisation organisation);
     }
 }

@@ -40,5 +40,19 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             }
             return organisation;
         }
+
+        public Organisation UpdateOrganisation(Organisation organisation)
+        {
+            //Only connect with siccar when the app is deployed.
+            if (bool.Parse(_config["ConnectToSiccar"]))
+            {
+                // We don't await this we pray to the Siccar gods that everyting works
+                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals/{organisation.Id}");
+                var siccarOrg = new SiccarOrganisation(organisation);
+
+                _httpClient.RegisterPostRequest(endpoint, siccarOrg);
+            }
+            return organisation;
+        }
     }
 }

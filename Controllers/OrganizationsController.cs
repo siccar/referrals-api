@@ -55,6 +55,9 @@ namespace OpenReferrals.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Organisation organisation)
         {
+            //This does nothing when SiccarConnect flag is false
+            _registerManagmentServiceClient.CreateOrganisation(organisation);
+
             await _orgRepository.UpdateOne(organisation);
             return Ok();
         }
