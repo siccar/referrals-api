@@ -102,6 +102,14 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpGet]
+        [Route("all/joined")]
+        public IActionResult GetAllMembers()
+        {
+            var requests = _orgMemberRepository.GetAllMembers();
+            return Ok(requests);
+        }
+
+        [HttpGet]
         [Route("all/{orgId}")]
         public IActionResult GetALlMembers([FromRoute] string orgId)
         {
