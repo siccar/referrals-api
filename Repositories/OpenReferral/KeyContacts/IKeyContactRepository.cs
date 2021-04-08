@@ -13,6 +13,7 @@ namespace OpenReferrals.Repositories.OpenReferral
         Task DeleteOne(KeyContacts contact);
         Task UpdateOne(KeyContacts contact);
         Task<IEnumerable<KeyContacts>> FindByOrgId(string organisationId);
+        Task<IEnumerable<KeyContacts>> FindApprovedByOrgId(string organisationId);
 
         Task<IEnumerable<KeyContacts>> FindByUserId(string userId);
        IEnumerable<KeyContacts> GetAll();

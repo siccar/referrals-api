@@ -20,6 +20,10 @@ namespace OpenReferrals.Repositories.OpenReferral
             return _repo.FilterBy(x => x.OrgId == organisationId);
         }
 
+        public async Task<IEnumerable<KeyContacts>> FindApprovedByOrgId(string organisationId)
+        {
+            return _repo.FilterBy(x => x.OrgId == organisationId && x.IsPending == false);
+        }
         public async Task<IEnumerable<KeyContacts>> FindByUserId(string userId)
         {
             return _repo.FilterBy(x => x.UserId == userId);

@@ -12,25 +12,41 @@ namespace OpenReferrals.Sendgrid
     {
         private string _apiKey;
         private string _templateId;
+        private string _baseAddress;
 
         public SendGridSender(SendGridSettings sendGridSettings)
         {
             _apiKey = sendGridSettings.ApiKey;
             _templateId = sendGridSettings.TemplateId;
+            _baseAddress = sendGridSettings.BaseAddress;
         }
 
         public async Task SendSingleTemplateEmail(EmailAddress from, EmailAddress to)
         {
+
+            var templateParameters = new TemplateParameters
+            {
+                OpenReferralAppUrl = _baseAddress + "myrequests",
+            };
             var client = new SendGridClient(_apiKey);
-            var msg = MailHelper.CreateSingleTemplateEmail(from, to, _templateId, null);
+            var msg = MailHelper.CreateSingleTemplateEmail(from, to, _templateId, templateParameters);
             var response = await client.SendEmailAsync(msg);
         }
 
         public async Task SendSingleTemplateEmailToMultiple(EmailAddress from, List<EmailAddress> to)
         {
+            var templateParameters = new TemplateParameters
+            {
+                OpenReferralAppUrl = _baseAddress + "myrequests",
+            };
             var client = new SendGridClient(_apiKey);
-            var msg = MailHelper.CreateSingleTemplateEmailToMultipleRecipients(from, to, _templateId, null);
+            var msg = MailHelper.CreateSingleTemplateEmailToMultipleRecipients(from, to, _templateId, templateParameters);
             var response = await client.SendEmailAsync(msg);
         }
+    }
+
+    public class TemplateParameters
+    {
+        public string OpenReferralAppUrl { get; set; }
     }
 }   

@@ -60,7 +60,7 @@ namespace OpenReferrals.Controllers
                 {
                     pendingrequests.AddRange(_orgMemberRepository.GetAllPendingRequests(o.OrgId).Where(x => x.Status != OrganisationMembersStatus.JOINED && x.Status != OrganisationMembersStatus.DENIED));
                 }
-                
+
             }
 
             return Ok(pendingrequests);
@@ -81,16 +81,13 @@ namespace OpenReferrals.Controllers
             }
 
             // Get Key Contact for org 
-            var keyContacts = await _keyContactRepo.FindByOrgId(orgId);
+            var keyContacts = await _keyContactRepo.FindApprovedByOrgId(orgId);
 
-            if (keyContacts.Count() > 0)
+            foreach (var kc in keyContacts)
             {
-                foreach (var kc in keyContacts)
-                {
-                    await _sendgridSender.SendSingleTemplateEmail(
-                    new SendGrid.Helpers.Mail.EmailAddress("info@wallet.services"),
-                    new SendGrid.Helpers.Mail.EmailAddress(kc.UserEmail));
-                }
+                await _sendgridSender.SendSingleTemplateEmail(
+                new SendGrid.Helpers.Mail.EmailAddress("info@wallet.services"),
+                new SendGrid.Helpers.Mail.EmailAddress(kc.UserEmail));
             }
 
             return Ok();

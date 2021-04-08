@@ -9,5 +9,6 @@ namespace OpenReferrals.Repositories.Configuration
     {
         public string ApiKey { get; set; }
         public string TemplateId{ get; set; }
+        public string BaseAddress { get; set; }
     }
 }

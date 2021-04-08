@@ -4,6 +4,7 @@ using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.Models;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
+using OpenReferrals.Sendgrid;
 using OpenReferrals.Sevices;
 using System;
 using System.Collections.Generic;
@@ -21,13 +22,16 @@ namespace OpenReferrals.Controllers
 
         private readonly IKeyContactRepository _keyContactRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
+        private readonly ISendGridSender _sendgridSender;
         public KeyContactController(
             IKeyContactRepository keyContactRepository,
-            IRegisterManagmentServiceClient registerManagmentServiceClient
+            IRegisterManagmentServiceClient registerManagmentServiceClient,
+            ISendGridSender sendGridSender
             )
         {
             _keyContactRepository = keyContactRepository;
             _registerManagmentServiceClient = registerManagmentServiceClient;
+            _sendgridSender = sendGridSender;
         }
 
         [HttpGet]
@@ -44,6 +48,15 @@ namespace OpenReferrals.Controllers
         public async Task<IActionResult> AddAdminRequestToKeyContact([FromRoute] string orgId)
         {
             await _keyContactRepository.InsertOne(new KeyContacts() { Id = Guid.NewGuid().ToString(), OrgId = orgId, UserId = JWTAttributesService.GetSubject(Request), UserEmail = JWTAttributesService.GetEmail(Request), IsAdmin = true, IsPending = true });
+
+            var keyContacts = await _keyContactRepository.FindApprovedByOrgId(orgId);
+
+            foreach (var kc in keyContacts)
+            {
+                await _sendgridSender.SendSingleTemplateEmail(
+                new SendGrid.Helpers.Mail.EmailAddress("info@wallet.services"),
+                new SendGrid.Helpers.Mail.EmailAddress(kc.UserEmail));
+            }
             return Ok();
         }
 
