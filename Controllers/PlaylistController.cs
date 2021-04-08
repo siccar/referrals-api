@@ -23,11 +23,7 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpGet]
-<<<<<<< Updated upstream
-        [Route("{userId")]
-=======
         [Route("{userId}")]
->>>>>>> Stashed changes
         public IActionResult Get(string userId)
         {
             var playList = _playListRepo.FindById(userId);
