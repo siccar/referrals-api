@@ -52,7 +52,7 @@ namespace OpenReferrals
             services.AddTransient<IOrganisationMemberRepository, OrganisationMemberRepository>();
 
 
-            services.AddTransient<ISendGridSender>(x => new SendGridSender(sendgridsettings.ApiKey, sendgridsettings.TemplateId));
+            services.AddTransient<ISendGridSender, SendGridSender>();
 
             var registerOptions = new RegisterManagmentOptions();
             Configuration.Bind("RegisterManagementAPI", registerOptions);

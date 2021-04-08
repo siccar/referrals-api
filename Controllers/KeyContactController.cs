@@ -50,7 +50,7 @@ namespace OpenReferrals.Controllers
 
         [HttpGet]
         [Route("admin/confirm/{orgId}/{userId}")]
-        public async Task<IActionResult> AddAdminRequestToKeyContact([FromRoute] string orgId, [FromRoute] string userId)
+        public async Task<IActionResult> ApproveAdminRequest([FromRoute] string orgId, [FromRoute] string userId)
         {
             var contact = _keyContactRepository.GetAll().Where(x=>x.OrgId == orgId && x.UserId == userId && x.IsPending == true).FirstOrDefault();
             contact.IsPending = false;

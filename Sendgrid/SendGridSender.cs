@@ -1,4 +1,5 @@
-﻿using SendGrid;
+﻿using OpenReferrals.Repositories.Configuration;
+using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,10 @@ namespace OpenReferrals.Sendgrid
         private string _apiKey;
         private string _templateId;
 
-        public SendGridSender(string apiKey, string templateId)
+        public SendGridSender(SendGridSettings sendGridSettings)
         {
-            _apiKey = apiKey;
-            _templateId = templateId;
+            _apiKey = sendGridSettings.ApiKey;
+            _templateId = sendGridSettings.TemplateId;
         }
 
         public async Task SendSingleTemplateEmail(EmailAddress from, EmailAddress to)
