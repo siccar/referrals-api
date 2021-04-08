@@ -11,6 +11,6 @@ namespace OpenReferrals.Repositories.OpenReferral
         Task InsertOne(Organisation org);
         Task UpdateOne(Organisation org);
         Task<Organisation> FindById(string organisationId);
-        IEnumerable<Organisation> GetAll();
+        IQueryable<Organisation> GetAll();
     }
 }

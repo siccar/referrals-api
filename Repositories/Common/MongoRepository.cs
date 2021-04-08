@@ -30,6 +30,11 @@ namespace OpenReferrals.Repositories.Common
                 .FirstOrDefault())?.CollectionName;
         }
 
+        public virtual IQueryable<T> AsQueryable()
+        {
+            return _collection.AsQueryable();
+        }
+
         public virtual IEnumerable<T> FilterBy(
             Expression<Func<T, bool>> filterExpression)
         {

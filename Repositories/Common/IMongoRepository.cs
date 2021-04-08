@@ -10,6 +10,8 @@ namespace OpenReferrals.Repositories.Common
 {
     public interface IMongoRepository<T> where T : IMongoDocument
     {
+        IQueryable<T> AsQueryable();
+
         IEnumerable<T> FilterBy(
                 Expression<Func<T, bool>> filterExpression);
 

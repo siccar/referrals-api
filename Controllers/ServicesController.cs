@@ -25,8 +25,15 @@ namespace OpenReferrals.Controllers
             _registerManagmentServiceClient = registerManagmentServiceClient;
         }
 
+        /// <summary>
+        /// Get All Services
+        /// </summary>
+        /// <param name="postcode">Use text to perform a keyword search on services. This performs a full text search on the service title.</param>
+        /// <param name="text">The postcode of the person who wishes to use the service. In order to find services that are within a reasonable distance.</param>
+        /// <param name="proximity">The distance in metres that the person is willing to travel from the target postcode.</param>
+        /// <returns>A <see cref="List{Organisation}"/>Returns all services based on input parameters</returns>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string postcode = null, double? proximity = null, string text = null)
         {
             var services = _serRepository.GetAll();
             return Ok(services);

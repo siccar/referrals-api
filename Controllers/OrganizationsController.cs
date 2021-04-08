@@ -6,12 +6,12 @@ using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenReferrals.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("[controller]")]
     public class OrganizationsController : ControllerBase
     {
@@ -27,13 +27,27 @@ namespace OpenReferrals.Controllers
             _registerManagmentServiceClient = registerManagmentServiceClient;
         }
 
+        /// <summary>
+        /// Get All Services
+        /// </summary>
+        /// <param name="text">The postcode of the person who wishes to use the service. In order to find services that are within a reasonable distance.</param>
+        /// <returns>A <see cref="List{Organisation}"/>Returns all services based on input parameters</returns>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string text = null)
         {
             var orgs = _orgRepository.GetAll();
+
+            if (text != null)
+            {
+
+                var filteredList = orgs.Where(org => org.Name.ToLower().Contains(text.ToLower())).ToList();
+                return Ok(filteredList);
+            }
+           
             return Ok(orgs);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Organisation organisation)
         {
@@ -45,12 +59,13 @@ namespace OpenReferrals.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> GetById(string id)
         {
             var org = await _orgRepository.FindById(id);
             return Ok(org);
         }
 
+        [Authorize]
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Organisation organisation)

@@ -22,9 +22,9 @@ namespace OpenReferrals.Repositories.OpenReferral
             return await _repo.FindByIdAsync(organisationId);
         }
 
-        public IEnumerable<Organisation> GetAll()
+        public IQueryable<Organisation> GetAll()
         {
-            return _repo.FilterBy(_ => true);
+            return _repo.AsQueryable();
         }
 
         public async Task InsertOne(Organisation org)
