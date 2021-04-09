@@ -43,16 +43,22 @@ namespace OpenReferrals.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public Service Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            throw new NotImplementedException();
+            var service = await _serRepository.FindById(id);
+            return Ok(service);
         }
 
         [HttpPut]
         [Route("{id}")]
-        public Service Put(string id)
+        public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Service service)
         {
-            throw new NotImplementedException();
+            //todo: connect with Siccar later on
+            //This does nothing when SiccarConnect flag is false
+           // _registerManagmentServiceClient.CreateService(service);
+
+            await _serRepository.UpdateOne(service);
+            return Ok();
         }
 
         [HttpGet]
