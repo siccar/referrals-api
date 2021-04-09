@@ -11,7 +11,7 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
     {
         Organisation CreateOrganisation(Organisation organisation);
         Organisation UpdateOrganisation(Organisation organisation);
+        Service CreateService(Service service);
 
-        //Service CreateService(Service service);
     }
 }
