@@ -2,17 +2,34 @@
 using OpenReferrals.DataModels;
 using System;
 using System.Collections.Generic;
-
+using OpenReferrals.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using OpenReferrals.RegisterManagementConnector.Models;
+using OpenReferrals.RegisterManagementConnector.ServiceClients;
+using OpenReferrals.Repositories.OpenReferral;
+using System.Threading.Tasks;
 namespace OpenReferrals.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class ServicesController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<Service> Get()
+        private readonly IServiceRepository _serRepository;
+        private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
+        public ServicesController(
+            IServiceRepository serRepository,
+            IRegisterManagmentServiceClient registerManagmentServiceClient
+            )
         {
-            throw new NotImplementedException();
+            _serRepository = serRepository;
+            _registerManagmentServiceClient = registerManagmentServiceClient;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var services = _serRepository.GetAll();
+            return Ok(services);
         }
 
         [HttpPost]
