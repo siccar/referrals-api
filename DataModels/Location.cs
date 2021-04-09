@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using OpenReferrals.Repositories.Common;
+using OpenReferrals.Repositories.Models;
+using System.Collections.Generic;
 
 namespace OpenReferrals.DataModels
 {
-    public class Location
+    [BsonCollection("locations")]
+    public class Location : IMongoDocument
     {
         public string Description { get; set; }
         public string Id { get; set; }
