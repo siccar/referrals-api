@@ -9,7 +9,6 @@ namespace OpenReferrals.DataModels
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> Physical_Addresses_Ids { get; set; }
-        public IEnumerable<string> Service_At_Locations_Ids { get; set; }
+        public IEnumerable<PhysicalAddress> Physical_Addresses { get; set; }
     }
 }
