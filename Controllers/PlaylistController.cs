@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenReferrals.DataModels;
 using OpenReferrals.Repositories.OpenReferral;
 using OpenReferrals.Sevices;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OpenReferrals.Controllers
@@ -30,7 +31,7 @@ namespace OpenReferrals.Controllers
         [HttpPost]
         public IActionResult AddPlaylist(Playlist list)
         {
-            _playListRepo.InsertOrUpdateOne(list);
+            _playListRepo.UpdateOne(list);
             return Ok(list);
         }
     }

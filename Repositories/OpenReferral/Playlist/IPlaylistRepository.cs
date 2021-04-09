@@ -8,7 +8,7 @@ namespace OpenReferrals.Repositories.OpenReferral
 {
     public interface IPlaylistRepository
     {
-        Task InsertOrUpdateOne(Playlist org);
+        Task UpdateOne(Playlist org);
         Task<Playlist> FindById(string userId);
     }
 }

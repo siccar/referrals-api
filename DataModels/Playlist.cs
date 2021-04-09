@@ -13,8 +13,6 @@ namespace OpenReferrals.DataModels
     public class Playlist : IMongoDocument
     {
         public string Id { get; set; }
-        public string UserId { get; set; }
-
-        public string[] Services { get; set; }
+        public List<string> Services { get; set; }
     }
 }

@@ -17,23 +17,22 @@ namespace OpenReferrals.Repositories.OpenReferral
             _repo = repo;
         }
 
-        public Task<Playlist> FindById(string userId)
+        public async Task<Playlist> FindById(string userId)
         {
-            return _repo.FindOneAsync(x => x.UserId == userId);
+            var playlist = await _repo.FindOneAsync(x => x.Id == userId);
+
+            if (playlist == null)
+            {
+                playlist = new Playlist { Id = userId, Services = new List<string>() };
+                await _repo.InsertOneAsync(playlist);
+            }
+
+            return playlist;
         }
 
-        public async Task InsertOrUpdateOne(Playlist playList)
+        public async Task UpdateOne(Playlist playList)
         {
-            var x = await _repo.FindOneAsync(x => x.UserId == playList.UserId);
-            if (x == null )
-            {
-                playList.Id = Guid.NewGuid().ToString();
-                await _repo.InsertOneAsync(playList);
-            }
-            else
-            {
-                await _repo.ReplaceOneAsync(playList);
-            }
+            await _repo.ReplaceOneAsync(playList);
         }
     }
 }
