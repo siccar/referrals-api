@@ -40,6 +40,23 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             }
             return organisation;
         }
+        //todo: later on to connect to Siccar
+        /*public Service CreateService(Service service)
+        {
+            // add id to be used by siccar
+            service.Id = Guid.NewGuid().ToString();
+
+            //Only connect with siccar when the app is deployed.
+            if (bool.Parse(_config["ConnectToSiccar"]))
+            {
+                // We don't await this we pray to the Siccar gods that everyting works
+                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals");
+                var siccarSer = new SiccarOrganisation(service);
+
+                _httpClient.RegisterPostRequest(endpoint, siccarSer);
+            }
+            return service;
+        }*/
 
         public Organisation UpdateOrganisation(Organisation organisation)
         {

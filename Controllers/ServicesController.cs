@@ -33,9 +33,12 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpPost]
-        public Service Post()
+        public async Task<IActionResult> Post([FromBody] Service service)
         {
-            throw new NotImplementedException();
+            //todo: uncomment later on
+            //var publishedService = _registerManagmentServiceClient.CreateService(service);
+            await _serRepository.InsertOne(service);
+            return Accepted(service);
         }
 
         [HttpGet]
