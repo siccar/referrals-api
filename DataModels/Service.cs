@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenReferrals.Repositories.Common;
+using OpenReferrals.Repositories.Models;
 
 namespace OpenReferrals.DataModels
 {
-    public class Service
+    [BsonCollection("services")]
+    public class Service : IMongoDocument
     {
         public string Accreditations { get; set; }
         public DateTime Assured_Date { get; set; }
