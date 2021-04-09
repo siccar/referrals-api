@@ -28,7 +28,6 @@ namespace OpenReferrals.Controllers
         [HttpPost]
         public async  Task<IActionResult> Post(Location location)
         {
-            location.Id = Guid.NewGuid().ToString();
             await _locationRepository.InsertOne(location);
             return Accepted();
         }
