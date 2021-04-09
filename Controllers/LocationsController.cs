@@ -1,39 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OpenReferrals.DataModels;
+using OpenReferrals.Repositories.OpenReferral;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OpenReferrals.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-
     public class LocationsController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<Location> Get()
+        public ILocationRepository _locationRepository;
+
+        public LocationsController(ILocationRepository locationRepository)
         {
-            throw new NotImplementedException();
+            _locationRepository = locationRepository;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var locations =  _locationRepository.GetAll();
+            return Ok(locations);
         }
 
         [HttpPost]
-        public IEnumerable<Location> Post()
+        public async  Task<IActionResult> Post(Location location)
         {
-            throw new NotImplementedException();
+            location.Id = Guid.NewGuid().ToString();
+            await _locationRepository.InsertOne(location);
+            return Accepted();
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IEnumerable<Location> Get([FromRoute] string id)
+        public async Task<IActionResult> Get([FromRoute] string id)
         {
-            throw new NotImplementedException();
+            var location = await _locationRepository.FindById(id);
+            return Ok(location);
         }
 
         [HttpPut]
         [Route("{id}")]
-        public IEnumerable<Location> Put([FromRoute] string id)
+        public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Location location)
         {
-            throw new NotImplementedException();
+            await _locationRepository.UpdateOne(location);
+            return Accepted();
         }
     }
 }
