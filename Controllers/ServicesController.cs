@@ -65,6 +65,7 @@ namespace OpenReferrals.Controllers
         [Route("{id}/validate")]
         public string Validate (string id)
         {
+            ////what is meant to return? ask away
             throw new NotImplementedException();
         }
 
@@ -72,7 +73,22 @@ namespace OpenReferrals.Controllers
         [Route("validate")]
         public string ValidateJsonService (string id)
         {
+            //what is meant to return? ask away
             throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        [Route("richness")]
+        public async Task<IActionResult> GetRichnessServicesSelection()
+        {
+            throw new NotImplementedException(); //todo: find out what the selection is based on
+        }
+
+        [HttpGet]
+        [Route("{id}/richness")]
+        public async Task<IActionResult> GetRichnessSingleService()
+        {
+            throw new NotImplementedException(); //todo: find out what this is under the proper data models
         }
     }
 }
