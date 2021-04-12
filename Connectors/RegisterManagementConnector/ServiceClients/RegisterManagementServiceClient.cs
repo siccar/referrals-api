@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.Configuration;
 using OpenReferrals.RegisterManagementConnector.Models;
+using OpenReferrals.Connectors.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
                 var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals");
                 var siccarOrg = new SiccarOrganisation(organisation);
 
-                _httpClient.RegisterPostRequest(endpoint, siccarOrg);
+                _httpClient.PostRequest(endpoint, siccarOrg);
             }
             return organisation;
         }
@@ -65,7 +66,7 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
                 var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals/{organisation.Id}");
                 var siccarOrg = new SiccarOrganisation(organisation);
 
-                _httpClient.RegisterPostRequest(endpoint, siccarOrg);
+                _httpClient.PostRequest(endpoint, siccarOrg);
             }
             return organisation;
         }

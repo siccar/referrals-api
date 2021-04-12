@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
 using OpenReferrals.DataModels;
 using OpenReferrals.Repositories.OpenReferral;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenReferrals.Controllers
@@ -11,11 +13,15 @@ namespace OpenReferrals.Controllers
     [Route("[controller]")]
     public class LocationsController : ControllerBase
     {
-        public ILocationRepository _locationRepository;
+        private readonly ILocationRepository _locationRepository;
+        private readonly IPostcodeServiceClient _postcodeServiceClient;
 
-        public LocationsController(ILocationRepository locationRepository)
+        public LocationsController(
+            ILocationRepository locationRepository,
+            IPostcodeServiceClient postcodeServiceClient)
         {
             _locationRepository = locationRepository;
+            _postcodeServiceClient = postcodeServiceClient;
         }
 
         [HttpGet]
@@ -26,10 +32,14 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpPost]
-        public async  Task<IActionResult> Post(Location location)
+        public async Task<IActionResult> Post(Location location)
         {
-            //TODO: call public postcode api to get lat and lon.
-            // Populate the lat and lon on the location.
+            var postcode = location.Physical_Addresses.First().Postal_Code;
+            var locationResult = await _postcodeServiceClient.GetPostcodeLocation(postcode);
+
+            location.Latitude = locationResult.Latitude;
+            location.Longitude = locationResult.Longitude;
+
             await _locationRepository.InsertOne(location);
             return Accepted(location);
         }

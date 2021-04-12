@@ -18,6 +18,8 @@ using OpenReferrals.Repositories.Common;
 using OpenReferrals.Repositories.OpenReferral;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using OpenReferrals.Sendgrid;
+using OpenReferrals.Connectors.Common;
+using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
 
 namespace OpenReferrals
 {
@@ -53,8 +55,8 @@ namespace OpenReferrals
             services.AddTransient<IPlaylistRepository, PlaylistRepository>();
             services.AddTransient<IServiceRepository, ServiceRepository>();
             services.AddTransient<ILocationRepository, LocationRepository>();
-
-
+            services.AddTransient<IUnAuthenticatedHttpAdapter, UnAuthenticatedHttpAdapter>();
+            services.AddTransient<IPostcodeServiceClient, PostcodeServiceClient>();
 
             services.AddTransient<ISendGridSender, SendGridSender>();
 

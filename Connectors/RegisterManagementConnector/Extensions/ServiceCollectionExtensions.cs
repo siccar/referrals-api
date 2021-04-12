@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OpenReferrals.Connectors.Common;
 using OpenReferrals.RegisterManagementConnector.Configuration;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 

@@ -14,7 +14,7 @@ using Microsoft.Identity.Web;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 
-namespace OpenReferrals.RegisterManagementConnector.ServiceClients
+namespace OpenReferrals.Connectors.Common
 {
     public class HttpClientAdapter : IHttpClientAdapter
     {
@@ -42,7 +42,7 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 
         }
 
-        public async Task<string> RegisterGetRequest(Uri endpoint)
+        public async Task<string> GetRequest(Uri endpoint)
         {
             var message = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
@@ -58,7 +58,7 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             }
             return responseString;
         }
-        public async Task<string> RegisterPostRequest(Uri endpoint, object payload)
+        public async Task<string> PostRequest(Uri endpoint, object payload)
         {
             var message = new HttpRequestMessage();
             message.RequestUri = endpoint;
