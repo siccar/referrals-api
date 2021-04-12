@@ -29,10 +29,12 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPlaylist(Playlist list)
+        public IActionResult AddPlaylist(Playlist playlist)
         {
-            _playListRepo.UpdateOne(list);
-            return Ok(list);
+            var userId = JWTAttributesService.GetSubject(Request);
+            playlist.Id = userId;
+            _playListRepo.UpdateOne(playlist);
+            return Ok(playlist);
         }
     }
 }
