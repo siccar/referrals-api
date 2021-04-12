@@ -28,8 +28,10 @@ namespace OpenReferrals.Controllers
         [HttpPost]
         public async  Task<IActionResult> Post(Location location)
         {
+            //TODO: call public postcode api to get lat and lon.
+            // Populate the lat and lon on the location.
             await _locationRepository.InsertOne(location);
-            return Accepted();
+            return Accepted(location);
         }
 
         [HttpGet]

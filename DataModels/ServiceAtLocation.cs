@@ -8,7 +8,7 @@ namespace OpenReferrals.DataModels
     public class ServiceAtLocation
     {
         public string Id { get; set; }
-        public Location Location {get; set;}
-        public Service Service { get; set; }
+        public string Location_Id { get; set; }
+        public string Service_Id { get; set; }
     }
 }

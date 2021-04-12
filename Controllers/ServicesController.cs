@@ -58,7 +58,7 @@ namespace OpenReferrals.Controllers
            // _registerManagmentServiceClient.CreateService(service);
 
             await _serRepository.UpdateOne(service);
-            return Ok();
+            return Ok(service);
         }
 
         [HttpGet]

@@ -17,6 +17,7 @@ namespace OpenReferrals.DataModels
         public string OrganizationId { get; set; }
         public IEnumerable<RegularSchedule> Regular_Schedules { get; set; }
         public IEnumerable<ServiceAtLocation> Service_At_Locations { get; set; }
+        public IEnumerable<string> Contacts { get; set; }
         public string Status { get; set; }
         public string Url { get; set; }
     }
