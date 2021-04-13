@@ -3,13 +3,13 @@ using Microsoft.Identity.Web;
 using Newtonsoft.Json;
 using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.Configuration;
-using OpenReferrals.RegisterManagementConnector.Models;
 using OpenReferrals.Connectors.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using OpenReferrals.Connectors.RegisterManagementConnector.Models;
 
 namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 {
@@ -34,7 +34,7 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             if (bool.Parse(_config["ConnectToSiccar"]))
             {
                 // We don't await this we pray to the Siccar gods that everyting works
-                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals");
+                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals/Organisations");
                 var siccarOrg = new SiccarOrganisation(organisation);
 
                 _httpClient.PostRequest(endpoint, siccarOrg);
@@ -49,10 +49,10 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             if (bool.Parse(_config["ConnectToSiccar"]))
             {
                 // We don't await this we pray to the Siccar gods that everyting works
-                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals");
-                //var siccarSer = new SiccarOrganisation(service);
+                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals/Services");
+                var siccarService = new SiccarService(service);
 
-                //_httpClient.RegisterPostRequest(endpoint, siccarSer);
+                _httpClient.PostRequest(endpoint, siccarService);
             }
             return service;
         }
@@ -63,12 +63,27 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
             if (bool.Parse(_config["ConnectToSiccar"]))
             {
                 // We don't await this we pray to the Siccar gods that everyting works
-                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals/{organisation.Id}");
+                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals/Organisations/{organisation.Id}");
                 var siccarOrg = new SiccarOrganisation(organisation);
 
                 _httpClient.PostRequest(endpoint, siccarOrg);
             }
             return organisation;
+        }
+
+        public Service UpdateService(Service service)
+        {
+
+            //Only connect with siccar when the app is deployed.
+            if (bool.Parse(_config["ConnectToSiccar"]))
+            {
+                // We don't await this we pray to the Siccar gods that everyting works
+                var endpoint = new Uri($"{_config["RegisterAPI:BaseUrl"]}/OpenReferrals/Services/{service.Id}");
+                var siccarService = new SiccarService(service);
+
+                _httpClient.PostRequest(endpoint, siccarService);
+            }
+            return service;
         }
     }
 }

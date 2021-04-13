@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OpenReferrals.RegisterManagementConnector.Models
+namespace OpenReferrals.Connectors.RegisterManagementConnector.Models
 {
     public class SiccarOrganisation
     {

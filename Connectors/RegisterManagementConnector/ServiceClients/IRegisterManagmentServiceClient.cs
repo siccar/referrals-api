@@ -1,5 +1,4 @@
 ﻿using OpenReferrals.DataModels;
-using OpenReferrals.RegisterManagementConnector.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +11,6 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
         Organisation CreateOrganisation(Organisation organisation);
         Organisation UpdateOrganisation(Organisation organisation);
         Service CreateService(Service service);
+        Service UpdateService(Service service);
     }
 }

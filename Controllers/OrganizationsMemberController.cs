@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenReferrals.DataModels;
-using OpenReferrals.RegisterManagementConnector.Models;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
 using OpenReferrals.Sendgrid;

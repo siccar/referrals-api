@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using OpenReferrals.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using OpenReferrals.RegisterManagementConnector.Models;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
 using System.Threading.Tasks;
@@ -42,10 +41,9 @@ namespace OpenReferrals.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Service service)
         {
-            //todo: uncomment later on
-            //var publishedService = _registerManagmentServiceClient.CreateService(service);
-            await _serRepository.InsertOne(service);
-            return Accepted(service);
+            var publishedService = _registerManagmentServiceClient.CreateService(service);
+            await _serRepository.InsertOne(publishedService);
+            return Accepted(publishedService);
         }
 
         [HttpGet]
@@ -60,12 +58,10 @@ namespace OpenReferrals.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Service service)
         {
-            //todo: connect with Siccar later on
-            //This does nothing when SiccarConnect flag is false
-           // _registerManagmentServiceClient.CreateService(service);
+            var updatedService = _registerManagmentServiceClient.UpdateService(service);
 
-            await _serRepository.UpdateOne(service);
-            return Ok(service);
+            await _serRepository.UpdateOne(updatedService);
+            return Ok(updatedService);
         }
 
         [HttpGet]
