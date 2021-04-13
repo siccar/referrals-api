@@ -32,7 +32,32 @@ namespace OpenReferrals.Repositories.OpenReferral
 
         public async Task UpdateOne(Playlist playList)
         {
-            await _repo.ReplaceOneAsync(playList);
+            if (!DuplicateItemCheck(playList))
+            {
+                await _repo.ReplaceOneAsync(playList);
+            }
+            else
+            {
+                var fixedPlayList = RemoveDuplicateItems(playList);
+                await _repo.ReplaceOneAsync(fixedPlayList);
+            }
+        }
+
+        private bool DuplicateItemCheck (Playlist playlist)
+        {
+            if (playlist.Services.Count != playlist.Services.Distinct().Count())
+            {
+                return true;
+            }
+
+            else { return false; }
+        }
+            
+        private Playlist RemoveDuplicateItems(Playlist playList) 
+        {
+            var uniqueServices = playList.Services.Distinct().ToList();
+            playList.Services = uniqueServices;
+            return playList;
         }
     }
 }
