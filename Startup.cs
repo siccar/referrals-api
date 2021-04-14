@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using OpenReferrals.Sendgrid;
 using OpenReferrals.Connectors.Common;
 using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
+using Microsoft.Azure.Search;
 
 namespace OpenReferrals
 {
@@ -59,6 +60,8 @@ namespace OpenReferrals
             services.AddTransient<IPostcodeServiceClient, PostcodeServiceClient>();
 
             services.AddTransient<ISendGridSender, SendGridSender>();
+
+            AddSearchIndexClient(services);
 
             var registerOptions = new RegisterManagmentOptions();
             Configuration.Bind("RegisterManagementAPI", registerOptions);
@@ -159,6 +162,15 @@ namespace OpenReferrals
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+        }
+
+        private void AddSearchIndexClient(IServiceCollection services)
+        {
+            string serviceName = Configuration["AzureSearch:ServiceName"];
+            string queryKey = Configuration["AzureSearch:PrimaryKey"];
+            string indexName = Configuration["AzureSearch:IndexName"];
+            SearchIndexClient searchIndexClient = new SearchIndexClient(serviceName, indexName, new SearchCredentials(queryKey));
+            services.AddSingleton<ISearchIndexClient>(searchIndexClient);
         }
     }
 }
