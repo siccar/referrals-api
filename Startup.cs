@@ -73,14 +73,19 @@ namespace OpenReferrals
         {
             if (env.IsDevelopment())
             {
-                app.UseExceptionHandler("/error-local-development");
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenReferrals v1"));
             }
             else
             {
                 app.UseExceptionHandler("/error");
             }
+
+            app.UseExceptionHandler("/error-local-development");
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenReferrals v1");
+            }
+            );
 
             app.UseHttpsRedirection();
 
