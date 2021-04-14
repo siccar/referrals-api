@@ -21,6 +21,7 @@ using OpenReferrals.Sendgrid;
 using OpenReferrals.Connectors.Common;
 using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
 using Microsoft.Azure.Search;
+using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
 
 namespace OpenReferrals
 {
@@ -58,6 +59,7 @@ namespace OpenReferrals
             services.AddTransient<ILocationRepository, LocationRepository>();
             services.AddTransient<IUnAuthenticatedHttpAdapter, UnAuthenticatedHttpAdapter>();
             services.AddTransient<IPostcodeServiceClient, PostcodeServiceClient>();
+            services.AddTransient<ILocationSearchServiceClient, LocationSearchServiceClient>();
 
             services.AddTransient<ISendGridSender, SendGridSender>();
 

@@ -10,7 +10,7 @@ namespace OpenReferrals.Connectors.LocationSearchConnector.ServiceClients
 {
     public interface ILocationSearchServiceClient
     {
-        public Task<DocumentSearchResult<SearchLocation>> QueryLocations(string postcode, int distance);
+        public Task<IEnumerable<SearchLocation>> QueryLocations(string postcode, double? distance);
         public void AddLocation(Location location);
     }
 }

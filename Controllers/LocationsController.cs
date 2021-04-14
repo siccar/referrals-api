@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
 using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
 using OpenReferrals.DataModels;
 using OpenReferrals.Repositories.OpenReferral;
@@ -15,13 +16,17 @@ namespace OpenReferrals.Controllers
     {
         private readonly ILocationRepository _locationRepository;
         private readonly IPostcodeServiceClient _postcodeServiceClient;
+        private readonly ILocationSearchServiceClient _locationSearchServiceClient;
 
         public LocationsController(
             ILocationRepository locationRepository,
-            IPostcodeServiceClient postcodeServiceClient)
+            IPostcodeServiceClient postcodeServiceClient,
+            ILocationSearchServiceClient locationSearchServiceClient
+            )
         {
             _locationRepository = locationRepository;
             _postcodeServiceClient = postcodeServiceClient;
+            _locationSearchServiceClient = locationSearchServiceClient;
         }
 
         [HttpGet]
@@ -40,6 +45,7 @@ namespace OpenReferrals.Controllers
             location.Latitude = locationResult.Latitude;
             location.Longitude = locationResult.Longitude;
 
+            _locationSearchServiceClient.AddLocation(location);
             await _locationRepository.InsertOne(location);
             return Accepted(location);
         }
