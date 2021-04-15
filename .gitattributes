@@ -12,6 +12,10 @@ azure-pipelines.yml merge=ours
 ###############################################################################
 #*.cs     diff=csharp
 
+#
+# Set Default behaviour for azurepipelines.yml
+azure-pipelines.yml merge=ours
+#
 ###############################################################################
 
 ##
