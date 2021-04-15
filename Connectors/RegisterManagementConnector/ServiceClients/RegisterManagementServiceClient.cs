@@ -27,8 +27,6 @@ namespace OpenReferrals.RegisterManagementConnector.ServiceClients
 
         public Organisation CreateOrganisation(Organisation organisation)
         {
-            // add id to be used by siccar
-            organisation.Id = Guid.NewGuid().ToString();
 
             //Only connect with siccar when the app is deployed.
             if (bool.Parse(_config["ConnectToSiccar"]))
