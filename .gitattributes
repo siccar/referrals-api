@@ -12,6 +12,10 @@
 ###############################################################################
 #*.cs     diff=csharp
 
+#
+# Set Default behaviour for azurepipelines.yml
+azure-pipelines.yml merge=ours
+#
 ###############################################################################
 # Set the merge driver for project and solution files
 #
