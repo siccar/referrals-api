@@ -30,5 +30,7 @@ namespace OpenReferrals.DataModels
         [Required(AllowEmptyStrings = false, ErrorMessage = "URL must be populated")]
         [Url(ErrorMessage = "URL must be valid")]
         public string Url { get; set; }
+        public IEnumerable<int> Tags { get; set; }
+        public int? Category { get; set; }
     }
 }
