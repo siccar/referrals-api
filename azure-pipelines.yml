@@ -13,6 +13,13 @@ variables:
   buildConfiguration: 'Debug'
 
 steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    script: |
+      rm appsettings.json -f
+      mv appsettings.Prod.json appsettings.json
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
