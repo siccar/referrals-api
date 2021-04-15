@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
 using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
 using OpenReferrals.DataModels;
@@ -32,14 +33,31 @@ namespace OpenReferrals.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var locations =  _locationRepository.GetAll();
+            var locations = _locationRepository.GetAll();
             return Ok(locations);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Location location)
+        public async Task<IActionResult> Post(Location location, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
+            try
+            {
+                Guid.Parse(location.Id);
+            }
+            catch (Exception _)
+            {
+                ModelState.AddModelError(nameof(Location.Id), "Location Id is not a valid Guid");
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+
             var postcode = location.Physical_Addresses.First().Postal_Code;
+            var isValid = await _postcodeServiceClient.ValidatePostcode(postcode);
+            if(!isValid.Result)
+            {
+                ModelState.AddModelError(nameof(Organisation.Id), "Postcode does not exist.");
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+
             var locationResult = await _postcodeServiceClient.GetPostcodeLocation(postcode);
 
             location.Latitude = locationResult.Latitude;

@@ -9,6 +9,7 @@ using OpenReferrals.Repositories.OpenReferral;
 using System.Threading.Tasks;
 using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace OpenReferrals.Controllers
 {
@@ -63,8 +64,17 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Service service)
+        public async Task<IActionResult> Post([FromBody] Service service, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
+            try
+            {
+                Guid.Parse(service.Id);
+            }
+            catch (Exception _)
+            {
+                ModelState.AddModelError(nameof(Service.Id), "Service Id is not a valid Guid");
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
             var publishedService = _registerManagmentServiceClient.CreateService(service);
             await _serRepository.InsertOne(publishedService);
             return Accepted(publishedService);

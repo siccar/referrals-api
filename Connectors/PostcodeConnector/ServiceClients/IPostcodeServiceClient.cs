@@ -9,5 +9,7 @@ namespace OpenReferrals.Connectors.PostcodeConnector.ServiceClients
     public interface IPostcodeServiceClient
     {
         Task<PostcodeLocation> GetPostcodeLocation(string postcode);
+        Task<PostcodeValidation> ValidatePostcode(string postcode);
+
     }
 }

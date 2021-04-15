@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
@@ -42,14 +43,23 @@ namespace OpenReferrals.Controllers
                 var filteredList = orgs.Where(org => org.Name.ToLower().Contains(text.ToLower())).ToList();
                 return Ok(filteredList);
             }
-           
+
             return Ok(orgs);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Organisation organisation)
+        public async Task<IActionResult> Post([FromBody] Organisation organisation, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
+            try
+            {
+                Guid.Parse(organisation.Id);
+            }
+            catch (Exception _)
+            {
+                ModelState.AddModelError(nameof(Organisation.Id), "Organization Id is not a valid Guid");
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
             var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
             await _orgRepository.InsertOne(publishedOrg);
             return Accepted(publishedOrg);

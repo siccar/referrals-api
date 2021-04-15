@@ -26,5 +26,14 @@ namespace OpenReferrals.Connectors.PostcodeConnector.ServiceClients
             var postcodeLocation = JsonConvert.DeserializeObject<PostcodeResult>(responseString);
             return postcodeLocation.Result;
         }
+
+        public async Task<PostcodeValidation> ValidatePostcode(string postcode)
+        {
+            var responseString = await _httpClient.GetRequest(
+                new Uri(PostcodeLocationBaseUrl + $"postcodes/{postcode}/validate"));
+
+            var isValid = JsonConvert.DeserializeObject<PostcodeValidation>(responseString);
+            return isValid;
+        }
     }
 }
