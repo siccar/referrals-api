@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
 using System.Linq;
 using Microsoft.Extensions.Options;
+using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
 
 namespace OpenReferrals.Controllers
 {
@@ -18,6 +19,7 @@ namespace OpenReferrals.Controllers
     public class ServicesController : ControllerBase
     {
         private readonly IServiceRepository _serRepository;
+        private readonly IPostcodeServiceClient _postcodeServiceClient;
         private readonly ILocationRepository _locationRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly ILocationSearchServiceClient _locationSearchServiceClient;
@@ -25,13 +27,15 @@ namespace OpenReferrals.Controllers
             IServiceRepository serRepository,
             ILocationRepository locationRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
-            ILocationSearchServiceClient locationSearchServiceClient
+            ILocationSearchServiceClient locationSearchServiceClient,
+            IPostcodeServiceClient postcodeServiceClient
             )
         {
             _serRepository = serRepository;
             _locationRepository = locationRepository;
             _registerManagmentServiceClient = registerManagmentServiceClient;
             _locationSearchServiceClient = locationSearchServiceClient;
+            _postcodeServiceClient = postcodeServiceClient;
         }
 
         /// <summary>
@@ -42,12 +46,18 @@ namespace OpenReferrals.Controllers
         /// <param name="proximity">The distance in metres that the person is willing to travel from the target postcode.</param>
         /// <returns>A <see cref="List{Service}"/>Returns all services based on input parameters</returns>
         [HttpGet]
-        public async Task<IActionResult> Get(string postcode = null, double? proximity = null, string text = null)
+        public async Task<IActionResult> Get([FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions, string postcode = null, double? proximity = null, string text = null)
         {
             var services = _serRepository.GetAll();
 
             if (postcode != null)
             {
+                var isValid = await _postcodeServiceClient.ValidatePostcode(postcode);
+                if (!isValid.Result)
+                {
+                    ModelState.AddModelError(nameof(Organisation.Id), "Postcode does not exist.");
+                    return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+                }
                 var locationResults = await _locationSearchServiceClient.QueryLocations(postcode, proximity);
                 var locationIds = locationResults.Select(res => res.id);
                 //TODO: We only check for the first serviceAtLocation as we only save one, for now.
