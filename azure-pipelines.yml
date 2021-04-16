@@ -5,7 +5,7 @@
 
 trigger:
 - develop
--master
+- master
 
 pool:
   vmImage: 'ubuntu-latest'
