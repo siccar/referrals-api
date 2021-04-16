@@ -113,6 +113,17 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpGet]
+        [Route("orgs-i-have-requested-to-join")]
+        public async Task<IActionResult> GetOrgsIAmRequestingToJoin()
+        {
+            var userId = JWTAttributesService.GetSubject(Request);
+            var responnses = await _keyContactRepository.FindByUserId(userId);
+            var nonPending = responnses.Where(x => x.IsPending == true);
+            return Ok(nonPending);
+        }
+        
+
+        [HttpGet]
         [Route("orgs/{orgId}/contacts")]
         public async Task<IActionResult> GetOrgsIAmAKeyContactFor(string orgId)
         {
