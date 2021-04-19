@@ -61,7 +61,7 @@ namespace OpenReferrals.Controllers
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
             var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
-            //await _orgRepository.InsertOne(publishedOrg);
+            await _orgRepository.InsertOne(publishedOrg);
             return Accepted(publishedOrg);
         }
 
