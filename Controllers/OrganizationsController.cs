@@ -61,7 +61,7 @@ namespace OpenReferrals.Controllers
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
             var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
-            await _orgRepository.InsertOne(publishedOrg);
+            //await _orgRepository.InsertOne(publishedOrg);
             return Accepted(publishedOrg);
         }
 
@@ -80,7 +80,7 @@ namespace OpenReferrals.Controllers
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Organisation organisation)
         {
             //This does nothing when SiccarConnect flag is false
-            _registerManagmentServiceClient.CreateOrganisation(organisation);
+            _registerManagmentServiceClient.UpdateOrganisation(organisation);
 
             await _orgRepository.UpdateOne(organisation);
             return Ok();
