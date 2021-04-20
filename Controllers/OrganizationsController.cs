@@ -60,9 +60,12 @@ namespace OpenReferrals.Controllers
                 ModelState.AddModelError(nameof(Organisation.Id), "Organization Id is not a valid Guid");
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
-            var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
-            await _orgRepository.InsertOne(publishedOrg);
-            return Accepted(publishedOrg);
+            //todo: org number existe or name, 
+            if () {// todo: send error 400 }
+            else {
+                var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
+                await _orgRepository.InsertOne(publishedOrg);
+                return Accepted(publishedOrg); }
         }
 
 
