@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using OpenReferrals.DataModels;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
+using OpenReferrals.Sevices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +19,16 @@ namespace OpenReferrals.Controllers
 
         private readonly IOrganisationRepository _orgRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
+        private readonly IKeyContactRepository _keyContactRepo;
         public OrganizationsController(
             IOrganisationRepository orgRepository,
-            IRegisterManagmentServiceClient registerManagmentServiceClient
+            IRegisterManagmentServiceClient registerManagmentServiceClient,
+            IKeyContactRepository keyContactRepository
             )
         {
             _orgRepository = orgRepository;
             _registerManagmentServiceClient = registerManagmentServiceClient;
+            _keyContactRepo = keyContactRepository;
         }
 
         /// <summary>
@@ -61,7 +65,6 @@ namespace OpenReferrals.Controllers
                 ModelState.AddModelError(nameof(Organisation.Id), "Organization Id is not a valid Guid");
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
-            //todo: org number existe or name, 
             if (currentOrgs.Any(org => org.CharityNumber == organisation.CharityNumber))
             {
                 ModelState.AddModelError(nameof(Organisation.CharityNumber), "Charity number already exists."); 
@@ -84,8 +87,17 @@ namespace OpenReferrals.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
+            var userId = JWTAttributesService.GetSubject(Request);
             var org = await _orgRepository.FindById(id);
-            return Ok(org);
+            var keyContactList = await _keyContactRepo.FindByOrgId(id);
+            if (keyContactList.ToList().Any(kc => kc.UserId == userId))
+            {
+                return Ok(org);
+            }
+            else
+            {
+                return Ok(new Organisation());
+            }
         }
 
         [Authorize]
