@@ -51,6 +51,7 @@ namespace OpenReferrals.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Organisation organisation, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
+            var currentOrgs = _orgRepository.GetAll();
             try
             {
                 Guid.Parse(organisation.Id);
@@ -61,11 +62,15 @@ namespace OpenReferrals.Controllers
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
             //todo: org number existe or name, 
-            if () {// todo: send error 400 }
+            if (currentOrgs.Where(org => (org.CharityNumber == organisation.CharityNumber) || (org.Name == organisation.Name)).Count() >=1)
+            {
+                return BadRequest("Organisation already exists.");
+            }
             else {
                 var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
                 await _orgRepository.InsertOne(publishedOrg);
-                return Accepted(publishedOrg); }
+                return Accepted(publishedOrg); 
+                }
         }
 
 
