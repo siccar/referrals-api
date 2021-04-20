@@ -137,5 +137,13 @@ namespace OpenReferrals.Controllers
         {
             throw new NotImplementedException(); //todo: find out what this is under the proper data models
         }
+
+        [HttpPost]
+        [Route("richness")]
+        public string RichnessJsonService(string id)
+        {
+            //what is meant to return? ask away
+            throw new NotImplementedException();
+        }
     }
 }
