@@ -62,9 +62,15 @@ namespace OpenReferrals.Controllers
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
             //todo: org number existe or name, 
-            if (currentOrgs.Where(org => (org.CharityNumber == organisation.CharityNumber) || (org.Name == organisation.Name)).Count() >=1)
+            if (currentOrgs.Any(org => org.CharityNumber == organisation.CharityNumber))
             {
-                return BadRequest("Organisation already exists.");
+                ModelState.AddModelError(nameof(Organisation.CharityNumber), "Charity number already exists."); 
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            if (currentOrgs.Any(org => org.Name == organisation.Name))
+            {
+                ModelState.AddModelError(nameof(Organisation.Name), "Organisation name already exists.");
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
             else {
                 var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
