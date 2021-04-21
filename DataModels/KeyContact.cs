@@ -11,16 +11,11 @@ namespace OpenReferrals.DataModels
     [BsonCollection("keycontacts")]
     public class KeyContacts : IMongoDocument
     {
-        [Required]
         public string Id { get; set; }
-        [Required]
         public string OrgId  { get; set; }
-        [Required]
         public string UserId  { get; set; }
         public string UserEmail { get; set; }
-        [Required]
         public bool IsAdmin { get; set; }
-        [Required]
         public bool IsPending { get; set; }
     }
 }
