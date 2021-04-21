@@ -16,10 +16,10 @@ namespace OpenReferrals.Controllers
     [Route("[controller]")]
     public class OrganizationsController : ControllerBase
     {
-
         private readonly IOrganisationRepository _orgRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly IKeyContactRepository _keyContactRepo;
+
         public OrganizationsController(
             IOrganisationRepository orgRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
@@ -43,7 +43,6 @@ namespace OpenReferrals.Controllers
 
             if (text != null)
             {
-
                 var filteredList = orgs.Where(org => org.Name.ToLower().Contains(text.ToLower())).ToList();
                 return Ok(filteredList);
             }
@@ -67,7 +66,7 @@ namespace OpenReferrals.Controllers
             }
             if (currentOrgs.Any(org => org.CharityNumber == organisation.CharityNumber))
             {
-                ModelState.AddModelError(nameof(Organisation.CharityNumber), "Charity number already exists."); 
+                ModelState.AddModelError(nameof(Organisation.CharityNumber), "Charity number already exists.");
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
             if (currentOrgs.Any(org => org.Name == organisation.Name))
@@ -75,13 +74,13 @@ namespace OpenReferrals.Controllers
                 ModelState.AddModelError(nameof(Organisation.Name), "Organisation name already exists.");
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
-            else {
+            else
+            {
                 var publishedOrg = _registerManagmentServiceClient.CreateOrganisation(organisation);
                 await _orgRepository.InsertOne(publishedOrg);
-                return Accepted(publishedOrg); 
-                }
+                return Accepted(publishedOrg);
+            }
         }
-
 
         [HttpGet]
         [Route("{id}")]
@@ -90,14 +89,8 @@ namespace OpenReferrals.Controllers
             var userId = JWTAttributesService.GetSubject(Request);
             var org = await _orgRepository.FindById(id);
             var keyContactList = await _keyContactRepo.FindByOrgId(id);
-            if (keyContactList.ToList().Any(kc => kc.UserId == userId))
-            {
-                return Ok(org);
-            }
-            else
-            {
-                return Ok(new Organisation());
-            }
+
+            return Ok(org);
         }
 
         [Authorize]
