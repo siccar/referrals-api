@@ -102,7 +102,7 @@ namespace OpenReferrals.Controllers
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Organisation organisation)
         {
             var userId = JWTAttributesService.GetSubject(Request);
-            if (!HasPermissions(userId, organisation.Id)
+            if (!HasPermissions(userId, organisation.Id))
             {
                 return Unauthorized(new Service());
             }
