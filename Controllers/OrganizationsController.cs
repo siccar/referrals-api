@@ -19,16 +19,19 @@ namespace OpenReferrals.Controllers
         private readonly IOrganisationRepository _orgRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly IKeyContactRepository _keyContactRepo;
+        private readonly IOrganisationMemberRepository _orgMemberRepo;
 
         public OrganizationsController(
             IOrganisationRepository orgRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
-            IKeyContactRepository keyContactRepository
+            IKeyContactRepository keyContactRepository,
+            IOrganisationMemberRepository orgMemberRepo
             )
         {
             _orgRepository = orgRepository;
             _registerManagmentServiceClient = registerManagmentServiceClient;
             _keyContactRepo = keyContactRepository;
+            _orgMemberRepo = orgMemberRepo;
         }
 
         /// <summary>
@@ -98,11 +101,34 @@ namespace OpenReferrals.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Organisation organisation)
         {
-            //This does nothing when SiccarConnect flag is false
-            _registerManagmentServiceClient.UpdateOrganisation(organisation);
+            var userId = JWTAttributesService.GetSubject(Request);
+            if (!HasPermissions(userId, organisation.Id)
+            {
+                return Unauthorized(new Service());
+            }
+            else
+            {
+                //This does nothing when SiccarConnect flag is false
+                _registerManagmentServiceClient.UpdateOrganisation(organisation);
 
-            await _orgRepository.UpdateOne(organisation);
-            return Ok();
+                await _orgRepository.UpdateOne(organisation);
+                return Ok();
+            }
+        }
+
+        private bool HasPermissions(string userId, string orgId)
+        {
+            var members = _orgMemberRepo.GetAllMembers(orgId);
+
+            if (members.ToList().Where(m => m.UserId == userId).Any())
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
         }
     }
 }

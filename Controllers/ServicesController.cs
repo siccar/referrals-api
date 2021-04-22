@@ -11,6 +11,7 @@ using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
 using System.Linq;
 using Microsoft.Extensions.Options;
 using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
+using OpenReferrals.Sevices;
 
 namespace OpenReferrals.Controllers
 {
@@ -23,9 +24,11 @@ namespace OpenReferrals.Controllers
         private readonly ILocationRepository _locationRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly ILocationSearchServiceClient _locationSearchServiceClient;
+        private readonly IOrganisationMemberRepository _organisationMemberRepo;
         public ServicesController(
             IServiceRepository serRepository,
             ILocationRepository locationRepository,
+            IOrganisationMemberRepository organisationMemberRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
             ILocationSearchServiceClient locationSearchServiceClient,
             IPostcodeServiceClient postcodeServiceClient
@@ -36,6 +39,7 @@ namespace OpenReferrals.Controllers
             _registerManagmentServiceClient = registerManagmentServiceClient;
             _locationSearchServiceClient = locationSearchServiceClient;
             _postcodeServiceClient = postcodeServiceClient;
+            _organisationMemberRepo = organisationMemberRepository;
         }
 
         /// <summary>
@@ -76,18 +80,26 @@ namespace OpenReferrals.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Service service, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
-            try
+            var userId = JWTAttributesService.GetSubject(Request);
+            if (!HasPermissions(userId, service.OrganizationId))
             {
-                Guid.Parse(service.Id);
+                return Unauthorized(new Service());
             }
-            catch (Exception _)
+            else
             {
-                ModelState.AddModelError(nameof(Service.Id), "Service Id is not a valid Guid");
-                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
-            }
-            var publishedService = _registerManagmentServiceClient.CreateService(service);
-            await _serRepository.InsertOne(publishedService);
-            return Accepted(publishedService);
+                try
+                {
+                    Guid.Parse(service.Id);
+                }
+                catch (Exception _)
+                {
+                    ModelState.AddModelError(nameof(Service.Id), "Service Id is not a valid Guid");
+                    return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+                }
+                var publishedService = _registerManagmentServiceClient.CreateService(service);
+                await _serRepository.InsertOne(publishedService);
+                return Accepted(publishedService);
+            }        
         }
 
         [HttpGet]
@@ -102,10 +114,18 @@ namespace OpenReferrals.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Service service)
         {
-            var updatedService = _registerManagmentServiceClient.UpdateService(service);
+            var userId = JWTAttributesService.GetSubject(Request);
+            if (!HasPermissions(userId, service.OrganizationId))
+            {
+                return Unauthorized(new Service());
+            }
+            else
+            {
+                var updatedService = _registerManagmentServiceClient.UpdateService(service);
 
-            await _serRepository.UpdateOne(updatedService);
-            return Ok(updatedService);
+                await _serRepository.UpdateOne(updatedService);
+                return Ok(updatedService);
+            }
         }
 
         [HttpGet]
@@ -144,6 +164,21 @@ namespace OpenReferrals.Controllers
         {
             //what is meant to return? ask away
             throw new NotImplementedException();
+        }
+
+        private bool HasPermissions (string userId, string orgId)
+        {
+            var members = _organisationMemberRepo.GetAllMembers(orgId);
+
+            if (members.ToList().Where(m => m.UserId == userId).Any())
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
         }
     }
 }
