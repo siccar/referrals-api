@@ -58,7 +58,8 @@ namespace OpenReferrals.Controllers
             {
                 if (!o.IsPending)
                 {
-                    pendingrequests.AddRange(_orgMemberRepository.GetAllPendingRequests(o.OrgId).Where(x => x.Status != OrganisationMembersStatus.JOINED && x.Status != OrganisationMembersStatus.DENIED));
+                    var allRequests = _orgMemberRepository.GetAllPendingRequests(o.OrgId);
+                    pendingrequests.AddRange(allRequests.Where(x => x.Status != OrganisationMembersStatus.JOINED && x.Status != OrganisationMembersStatus.DENIED));
                 }
 
             }
@@ -78,6 +79,12 @@ namespace OpenReferrals.Controllers
             {
                 var orgmemberRequest = new OrganisationMember() { Id = Guid.NewGuid().ToString(), OrgId = orgId, Status = OrganisationMembersStatus.REQUESTED, UserId = userId, Email = email };
                 await _orgMemberRepository.InsertOne(orgmemberRequest);
+            }
+            else
+            {
+                var request = existingRequestsForUser.First();
+                request.Status = OrganisationMembersStatus.REQUESTED;
+                await _orgMemberRepository.UpdateOne(request);
             }
 
             // Get Key Contact for org 
