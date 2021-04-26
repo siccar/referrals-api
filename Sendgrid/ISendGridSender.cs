@@ -6,7 +6,7 @@ namespace OpenReferrals.Sendgrid
 {
     public interface ISendGridSender
     {
-        Task SendSingleTemplateEmail(EmailAddress from, EmailAddress to);
+        Task SendSingleTemplateEmail(EmailAddress from, EmailAddress to, string orgName);
         Task SendSingleTemplateEmailToMultiple(EmailAddress from, List<EmailAddress> to);
     }
 }

@@ -27,12 +27,14 @@ namespace OpenReferrals.Controllers
         private readonly ISendGridSender _sendgridSender;
 
         public OrganizationMemberController(
+            IOrganisationRepository organisationRepository,
             IKeyContactRepository keyContactRepo,
             IOrganisationMemberRepository orgMemberRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
             ISendGridSender sendgridSender
             )
         {
+            _orgRepository = organisationRepository;
             _orgMemberRepository = orgMemberRepository;
             _keyContactRepo = keyContactRepo;
             _registerManagmentServiceClient = registerManagmentServiceClient;
@@ -89,12 +91,15 @@ namespace OpenReferrals.Controllers
 
             // Get Key Contact for org 
             var keyContacts = await _keyContactRepo.FindApprovedByOrgId(orgId);
+            var org = await _orgRepository.FindById(orgId);
 
             foreach (var kc in keyContacts)
             {
                 await _sendgridSender.SendSingleTemplateEmail(
-                new SendGrid.Helpers.Mail.EmailAddress("info@wallet.services"),
-                new SendGrid.Helpers.Mail.EmailAddress(kc.UserEmail));
+                new SendGrid.Helpers.Mail.EmailAddress("support@wearecast.org.uk"),
+                new SendGrid.Helpers.Mail.EmailAddress(kc.UserEmail),
+                org.Name
+                );
             }
 
             return Ok();

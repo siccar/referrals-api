@@ -21,15 +21,18 @@ namespace OpenReferrals.Controllers
     {
 
         private readonly IKeyContactRepository _keyContactRepository;
+        private readonly IOrganisationRepository _organisationRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly ISendGridSender _sendgridSender;
         public KeyContactController(
             IKeyContactRepository keyContactRepository,
+            IOrganisationRepository organisationRepo,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
             ISendGridSender sendGridSender
             )
         {
             _keyContactRepository = keyContactRepository;
+            _organisationRepository = organisationRepo;
             _registerManagmentServiceClient = registerManagmentServiceClient;
             _sendgridSender = sendGridSender;
         }
@@ -50,12 +53,14 @@ namespace OpenReferrals.Controllers
             await _keyContactRepository.InsertOne(new KeyContacts() { Id = Guid.NewGuid().ToString(), OrgId = orgId, UserId = JWTAttributesService.GetSubject(Request), UserEmail = JWTAttributesService.GetEmail(Request), IsAdmin = true, IsPending = true });
 
             var keyContacts = await _keyContactRepository.FindApprovedByOrgId(orgId);
-
+            var org = await _organisationRepository.FindById(orgId);
             foreach (var kc in keyContacts)
             {
                 await _sendgridSender.SendSingleTemplateEmail(
-                new SendGrid.Helpers.Mail.EmailAddress("info@wallet.services"),
-                new SendGrid.Helpers.Mail.EmailAddress(kc.UserEmail));
+                new SendGrid.Helpers.Mail.EmailAddress("support@wearecast.org.uk"),
+                new SendGrid.Helpers.Mail.EmailAddress(kc.UserEmail),
+                org.Name
+                );
             }
             return Ok();
         }
