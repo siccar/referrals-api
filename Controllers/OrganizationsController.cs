@@ -118,9 +118,9 @@ namespace OpenReferrals.Controllers
 
         private bool HasPermissions(string userId, string orgId)
         {
-            var members = _orgMemberRepo.GetAllMembers(orgId);
+            var keyContacts = _keyContactRepo.FindByOrgId(orgId);
 
-            if (members.ToList().Where(m => m.UserId == userId).Any())
+            if (keyContacts.Result.ToList().Where(m => m.UserId == userId).Any())
             {
                 return true;
             }

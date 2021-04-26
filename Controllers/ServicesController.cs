@@ -25,13 +25,16 @@ namespace OpenReferrals.Controllers
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly ILocationSearchServiceClient _locationSearchServiceClient;
         private readonly IOrganisationMemberRepository _organisationMemberRepo;
+        private readonly IKeyContactRepository _keyContactRepo;
+
         public ServicesController(
             IServiceRepository serRepository,
             ILocationRepository locationRepository,
             IOrganisationMemberRepository organisationMemberRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
             ILocationSearchServiceClient locationSearchServiceClient,
-            IPostcodeServiceClient postcodeServiceClient
+            IPostcodeServiceClient postcodeServiceClient,
+            IKeyContactRepository keyContactRepo
             )
         {
             _serRepository = serRepository;
@@ -40,6 +43,7 @@ namespace OpenReferrals.Controllers
             _locationSearchServiceClient = locationSearchServiceClient;
             _postcodeServiceClient = postcodeServiceClient;
             _organisationMemberRepo = organisationMemberRepository;
+            _keyContactRepo = keyContactRepo;
         }
 
         /// <summary>
@@ -83,7 +87,7 @@ namespace OpenReferrals.Controllers
             var userId = JWTAttributesService.GetSubject(Request);
             if (!HasPermissions(userId, service.OrganizationId))
             {
-                return Unauthorized(new Service());
+                return Forbid();
             }
             else
             {
@@ -168,9 +172,9 @@ namespace OpenReferrals.Controllers
 
         private bool HasPermissions (string userId, string orgId)
         {
-            var members = _organisationMemberRepo.GetAllMembers(orgId);
+            var keyContacts = _keyContactRepo.FindByOrgId(orgId);
 
-            if (members.ToList().Where(m => m.UserId == userId).Any())
+            if (keyContacts.Result.ToList().Where(m => m.UserId == userId).Any())
             {
                 return true;
             }
