@@ -71,7 +71,7 @@ namespace OpenReferrals.Controllers
                 ModelState.AddModelError(nameof(Organisation.Id), "Organization Id is not a valid Guid");
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
-            if (currentOrgs.Any(org => org.CharityNumber == organisation.CharityNumber))
+            if (organisation.CharityNumber > 0 && currentOrgs.Any(org => org.CharityNumber == organisation.CharityNumber))
             {
                 ModelState.AddModelError(nameof(Organisation.CharityNumber), "Charity number already exists.");
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
