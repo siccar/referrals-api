@@ -53,7 +53,7 @@ namespace OpenReferrals.Controllers
             return Ok(orgs);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Organisation organisation, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
