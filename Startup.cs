@@ -22,6 +22,9 @@ using OpenReferrals.Connectors.Common;
 using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
 using Microsoft.Azure.Search;
 using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
+using OpenReferrals.Policies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace OpenReferrals
 {
@@ -111,6 +114,15 @@ namespace OpenReferrals
                 .AddMicrosoftIdentityWebApi(Configuration, "AzureAdB2C")
                 .EnableTokenAcquisitionToCallDownstreamApi()
                 .AddInMemoryTokenCaches();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("MustBeOrgAdmin", policy =>
+                    policy.Requirements.Add(new OrganisationAdminRequirement()));
+            });
+
+            services.AddTransient<IAuthorizationHandler, OrganisationAdminHandler>();
+            services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
         }
 
         private void ApplySwaggerGen(IServiceCollection services)

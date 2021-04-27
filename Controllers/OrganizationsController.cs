@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OpenReferrals.DataModels;
+using OpenReferrals.Policies;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
 using OpenReferrals.Sevices;
@@ -20,18 +21,21 @@ namespace OpenReferrals.Controllers
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly IKeyContactRepository _keyContactRepo;
         private readonly IOrganisationMemberRepository _orgMemberRepo;
+        private readonly IAuthorizationService _authorizationService;
 
         public OrganizationsController(
             IOrganisationRepository orgRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
             IKeyContactRepository keyContactRepository,
-            IOrganisationMemberRepository orgMemberRepo
+            IOrganisationMemberRepository orgMemberRepo,
+            IAuthorizationService authorizationService
             )
         {
             _orgRepository = orgRepository;
             _registerManagmentServiceClient = registerManagmentServiceClient;
             _keyContactRepo = keyContactRepository;
             _orgMemberRepo = orgMemberRepo;
+            _authorizationService = authorizationService;
         }
 
         /// <summary>
@@ -96,24 +100,21 @@ namespace OpenReferrals.Controllers
             return Ok(org);
         }
 
-        [Authorize]
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Organisation organisation)
         {
-            var userId = JWTAttributesService.GetSubject(Request);
-            if (!HasPermissions(userId, organisation.Id))
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, id, AuthzPolicyNames.MustBeOrgAdmin);
+
+            if (!authorizationResult.Succeeded)
             {
                 return Forbid();
             }
-            else
-            {
-                //This does nothing when SiccarConnect flag is false
-                _registerManagmentServiceClient.UpdateOrganisation(organisation);
+            //This does nothing when SiccarConnect flag is false
+            _registerManagmentServiceClient.UpdateOrganisation(organisation);
 
-                await _orgRepository.UpdateOne(organisation);
-                return Ok();
-            }
+            await _orgRepository.UpdateOne(organisation);
+            return Ok();
         }
 
         private bool HasPermissions(string userId, string orgId)

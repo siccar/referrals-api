@@ -9,4 +9,9 @@ namespace OpenReferrals.Policies
     public class OrganisationAdminRequirement : IAuthorizationRequirement
     {
     }
+
+    public static class AuthzPolicyNames
+    {
+        public const string MustBeOrgAdmin = "MustBeOrgAdmin";
+    }
 }

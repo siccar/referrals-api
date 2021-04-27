@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using OpenReferrals.Repositories.OpenReferral;
 using System;
 using System.Collections.Generic;
@@ -11,14 +13,16 @@ namespace OpenReferrals.Policies
     public class OrganisationAdminHandler : AuthorizationHandler<OrganisationAdminRequirement, string>
     {
         private readonly IKeyContactRepository _keyContactRepository;
-        public OrganisationAdminHandler(IKeyContactRepository keyContactRepository)
+        private readonly IActionContextAccessor _actionContextAccessor;
+        public OrganisationAdminHandler(IKeyContactRepository keyContactRepository, IActionContextAccessor actionContextAccessor)
         {
             _keyContactRepository = keyContactRepository;
+            _actionContextAccessor = actionContextAccessor;
         }
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-                                                  OrganisationAdminRequirement requirement,
-                                                  string orgId)
+                                                  OrganisationAdminRequirement requirement, string orgId)
         {
+         
             var keyContacts = _keyContactRepository.FindByOrgId(orgId);
             var subClaim = context.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier);
 
