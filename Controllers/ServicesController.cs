@@ -121,7 +121,7 @@ namespace OpenReferrals.Controllers
             var userId = JWTAttributesService.GetSubject(Request);
             if (!HasPermissions(userId, service.OrganizationId))
             {
-                return Unauthorized(new Service());
+                return Forbid();
             }
             else
             {
