@@ -49,7 +49,6 @@ namespace OpenReferrals.Controllers
             return Ok();
         }
 
-
         [HttpGet]
         [Route("admin/{orgId}")]
         public async Task<IActionResult> AddAdminRequestToKeyContact([FromRoute] string orgId)
@@ -69,7 +68,6 @@ namespace OpenReferrals.Controllers
             return Ok();
 
         }
-
 
         [HttpGet]
         [Route("admin/confirm/{orgId}/{userId}")]
@@ -151,21 +149,6 @@ namespace OpenReferrals.Controllers
         public async Task<IActionResult> GetOrgsIAmAKeyContactFor(string orgId)
         {
             return Ok(await _keyContactRepository.FindByOrgId(orgId));
-        }
-
-        private bool HasPermissions(string userId, string orgId)
-        {
-            var keyContacts = _keyContactRepository.FindByOrgId(orgId);
-
-            if (keyContacts.Result.ToList().Where(m => m.UserId == userId).Any())
-            {
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
         }
     }
 }
