@@ -13,11 +13,9 @@ namespace OpenReferrals.Policies
     public class OrganisationAdminHandler : AuthorizationHandler<OrganisationAdminRequirement, string>
     {
         private readonly IKeyContactRepository _keyContactRepository;
-        private readonly IActionContextAccessor _actionContextAccessor;
         public OrganisationAdminHandler(IKeyContactRepository keyContactRepository, IActionContextAccessor actionContextAccessor)
         {
             _keyContactRepository = keyContactRepository;
-            _actionContextAccessor = actionContextAccessor;
         }
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
                                                   OrganisationAdminRequirement requirement, string orgId)
