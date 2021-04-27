@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenReferrals.DataModels;
+using OpenReferrals.Policies;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
 using OpenReferrals.Sendgrid;
@@ -25,13 +26,15 @@ namespace OpenReferrals.Controllers
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly IKeyContactRepository _keyContactRepo;
         private readonly ISendGridSender _sendgridSender;
+        private readonly IAuthorizationService _authorizationService;
 
         public OrganizationMemberController(
             IOrganisationRepository organisationRepository,
             IKeyContactRepository keyContactRepo,
             IOrganisationMemberRepository orgMemberRepository,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
-            ISendGridSender sendgridSender
+            ISendGridSender sendgridSender, 
+            IAuthorizationService authorizationService
             )
         {
             _orgRepository = organisationRepository;
@@ -39,6 +42,7 @@ namespace OpenReferrals.Controllers
             _keyContactRepo = keyContactRepo;
             _registerManagmentServiceClient = registerManagmentServiceClient;
             _sendgridSender = sendgridSender;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -134,6 +138,12 @@ namespace OpenReferrals.Controllers
         [Route("grant/{orgId}/{userId}")]
         public async Task<IActionResult> GrantAccess([FromRoute] string orgId, [FromRoute] string userId)
         {
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, orgId, AuthzPolicyNames.MustBeOrgAdmin);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
             return await UpdateUser(Request, orgId, userId, OrganisationMembersStatus.JOINED);
 
         }
@@ -142,6 +152,12 @@ namespace OpenReferrals.Controllers
         [Route("revoke/{orgId}/{userId}")]
         public async Task<IActionResult> RevokeAccess([FromRoute] string orgId, [FromRoute] string userId)
         {
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, orgId, AuthzPolicyNames.MustBeOrgAdmin);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
             return await UpdateUser(Request, orgId, userId, OrganisationMembersStatus.REVOKED);
         }
 
@@ -149,6 +165,12 @@ namespace OpenReferrals.Controllers
         [Route("deny/{orgId}/{userId}")]
         public async Task<IActionResult> DenyAccess([FromRoute] string orgId, [FromRoute] string userId)
         {
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, orgId, AuthzPolicyNames.MustBeOrgAdmin);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
             return await UpdateUser(Request, orgId, userId, OrganisationMembersStatus.DENIED);
         }
 

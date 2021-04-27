@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenReferrals.DataModels;
+using OpenReferrals.Policies;
 using OpenReferrals.RegisterManagementConnector.ServiceClients;
 using OpenReferrals.Repositories.OpenReferral;
 using OpenReferrals.Sendgrid;
 using OpenReferrals.Sevices;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,24 +24,28 @@ namespace OpenReferrals.Controllers
         private readonly IOrganisationRepository _organisationRepository;
         private readonly IRegisterManagmentServiceClient _registerManagmentServiceClient;
         private readonly ISendGridSender _sendgridSender;
+        private readonly IAuthorizationService _authorizationService;
+
         public KeyContactController(
             IKeyContactRepository keyContactRepository,
             IOrganisationRepository organisationRepo,
             IRegisterManagmentServiceClient registerManagmentServiceClient,
-            ISendGridSender sendGridSender
+            ISendGridSender sendGridSender,
+            IAuthorizationService authorizationService
             )
         {
             _keyContactRepository = keyContactRepository;
             _organisationRepository = organisationRepo;
             _registerManagmentServiceClient = registerManagmentServiceClient;
             _sendgridSender = sendGridSender;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
         [Route("{orgId}")]
         public async Task<IActionResult> AddKeyContact([FromRoute] string orgId)
         {
-            await _keyContactRepository.InsertOne(new KeyContacts() {Id = Guid.NewGuid().ToString(), OrgId = orgId, UserId = JWTAttributesService.GetSubject(Request), UserEmail = JWTAttributesService.GetEmail(Request) } );
+            await _keyContactRepository.InsertOne(new KeyContacts() { Id = Guid.NewGuid().ToString(), OrgId = orgId, UserId = JWTAttributesService.GetSubject(Request), UserEmail = JWTAttributesService.GetEmail(Request) });
             return Ok();
         }
 
@@ -63,6 +67,7 @@ namespace OpenReferrals.Controllers
                 );
             }
             return Ok();
+
         }
 
 
@@ -70,7 +75,13 @@ namespace OpenReferrals.Controllers
         [Route("admin/confirm/{orgId}/{userId}")]
         public async Task<IActionResult> ApproveAdminRequest([FromRoute] string orgId, [FromRoute] string userId)
         {
-            var contact = _keyContactRepository.GetAll().Where(x=>x.OrgId == orgId && x.UserId == userId && x.IsPending == true).FirstOrDefault();
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, orgId, AuthzPolicyNames.MustBeOrgAdmin);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+            var contact = _keyContactRepository.GetAll().Where(x => x.OrgId == orgId && x.UserId == userId && x.IsPending == true).FirstOrDefault();
             contact.IsPending = false;
             await _keyContactRepository.UpdateOne(contact);
             return Ok();
@@ -83,9 +94,9 @@ namespace OpenReferrals.Controllers
             var callingUserId = JWTAttributesService.GetSubject(Request);
             var contacts = await _keyContactRepository.FindByUserId(callingUserId);
             var list = new List<KeyContacts>();
-            foreach(var contact in contacts)
+            foreach (var contact in contacts)
             {
-                var  x = (await _keyContactRepository.FindByOrgId(contact.OrgId)).Where(x => x.UserId != callingUserId && x.IsPending == true);
+                var x = (await _keyContactRepository.FindByOrgId(contact.OrgId)).Where(x => x.UserId != callingUserId && x.IsPending == true);
                 list.AddRange(x);
             }
 
@@ -96,6 +107,12 @@ namespace OpenReferrals.Controllers
         [Route("delete")]
         public async Task<IActionResult> DeleteOrgKeyContacts([FromBody] KeyContacts contact)
         {
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, contact.OrgId, AuthzPolicyNames.MustBeOrgAdmin);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
             await _keyContactRepository.DeleteOne(contact);
             return Ok();
         }
@@ -114,7 +131,7 @@ namespace OpenReferrals.Controllers
         {
             var userId = JWTAttributesService.GetSubject(Request);
             var responnses = await _keyContactRepository.FindByUserId(userId);
-            var nonPending =  responnses.Where(x => x.IsPending == false);
+            var nonPending = responnses.Where(x => x.IsPending == false);
             return Ok(nonPending);
         }
 
@@ -127,7 +144,7 @@ namespace OpenReferrals.Controllers
             var nonPending = responnses.Where(x => x.IsPending == true);
             return Ok(nonPending);
         }
-        
+
 
         [HttpGet]
         [Route("orgs/{orgId}/contacts")]
