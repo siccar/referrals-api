@@ -170,5 +170,20 @@ namespace OpenReferrals.Controllers
             var exists = (await _keyContactRepo.FindByUserId(userId)).ToList().Where(x => x.IsPending == false).ToList();
             return exists.Count > 0;
         }
+
+        private bool HasPermissions(string userId, string orgId)
+        {
+            var keyContacts = _keyContactRepo.FindByOrgId(orgId);
+
+            if (keyContacts.Result.ToList().Where(m => m.UserId == userId).Any())
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
     }
 }

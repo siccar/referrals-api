@@ -136,6 +136,19 @@ namespace OpenReferrals.Controllers
             return Ok(await _keyContactRepository.FindByOrgId(orgId));
         }
 
+        private bool HasPermissions(string userId, string orgId)
+        {
+            var keyContacts = _keyContactRepository.FindByOrgId(orgId);
 
+            if (keyContacts.Result.ToList().Where(m => m.UserId == userId).Any())
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
     }
 }
