@@ -12,6 +12,7 @@ using System.Linq;
 using Microsoft.Extensions.Options;
 using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
 using OpenReferrals.Sevices;
+using OpenReferrals.Policies;
 
 namespace OpenReferrals.Controllers
 {
@@ -26,6 +27,7 @@ namespace OpenReferrals.Controllers
         private readonly ILocationSearchServiceClient _locationSearchServiceClient;
         private readonly IOrganisationMemberRepository _organisationMemberRepo;
         private readonly IKeyContactRepository _keyContactRepo;
+        private readonly IAuthorizationService _authorizationService;
 
         public ServicesController(
             IServiceRepository serRepository,
@@ -34,7 +36,8 @@ namespace OpenReferrals.Controllers
             IRegisterManagmentServiceClient registerManagmentServiceClient,
             ILocationSearchServiceClient locationSearchServiceClient,
             IPostcodeServiceClient postcodeServiceClient,
-            IKeyContactRepository keyContactRepo
+            IKeyContactRepository keyContactRepo,
+            IAuthorizationService authorizationService
             )
         {
             _serRepository = serRepository;
@@ -44,6 +47,7 @@ namespace OpenReferrals.Controllers
             _postcodeServiceClient = postcodeServiceClient;
             _organisationMemberRepo = organisationMemberRepository;
             _keyContactRepo = keyContactRepo;
+            _authorizationService = authorizationService;
         }
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace OpenReferrals.Controllers
                     .FindAll(service => locationIds.Contains(service.Service_At_Locations.First().Location_Id));
             }
 
-            if(text != null)
+            if (text != null)
             {
                 services = services.ToList().FindAll(service => service.Name.Contains(text));
             }
@@ -85,25 +89,25 @@ namespace OpenReferrals.Controllers
         public async Task<IActionResult> Post([FromBody] Service service, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
             var userId = JWTAttributesService.GetSubject(Request);
-            if (!HasPermissions(userId, service.OrganizationId))
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, service.OrganizationId, AuthzPolicyNames.MustBeOrgAdmin);
+
+            if (!authorizationResult.Succeeded)
             {
                 return Forbid();
             }
-            else
+
+            try
             {
-                try
-                {
-                    Guid.Parse(service.Id);
-                }
-                catch (Exception _)
-                {
-                    ModelState.AddModelError(nameof(Service.Id), "Service Id is not a valid Guid");
-                    return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
-                }
-                var publishedService = _registerManagmentServiceClient.CreateService(service);
-                await _serRepository.InsertOne(publishedService);
-                return Accepted(publishedService);
-            }        
+                Guid.Parse(service.Id);
+            }
+            catch (Exception _)
+            {
+                ModelState.AddModelError(nameof(Service.Id), "Service Id is not a valid Guid");
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            var publishedService = _registerManagmentServiceClient.CreateService(service);
+            await _serRepository.InsertOne(publishedService);
+            return Accepted(publishedService);
         }
 
         [HttpGet]
@@ -118,8 +122,9 @@ namespace OpenReferrals.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Service service)
         {
-            var userId = JWTAttributesService.GetSubject(Request);
-            if (!HasPermissions(userId, service.OrganizationId))
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, service.OrganizationId, AuthzPolicyNames.MustBeOrgAdmin);
+
+            if (!authorizationResult.Succeeded)
             {
                 return Forbid();
             }
@@ -168,21 +173,6 @@ namespace OpenReferrals.Controllers
         {
             //what is meant to return? ask away
             throw new NotImplementedException();
-        }
-
-        private bool HasPermissions (string userId, string orgId)
-        {
-            var keyContacts = _keyContactRepo.FindByOrgId(orgId);
-
-            if (keyContacts.Result.ToList().Where(m => m.UserId == userId).Any())
-            {
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
         }
     }
 }
