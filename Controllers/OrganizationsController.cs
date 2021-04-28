@@ -101,6 +101,7 @@ namespace OpenReferrals.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Organisation organisation)
         {

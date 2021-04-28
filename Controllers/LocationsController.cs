@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
 using OpenReferrals.Connectors.PostcodeConnector.ServiceClients;
@@ -37,6 +38,7 @@ namespace OpenReferrals.Controllers
             return Ok(locations);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(Location location, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
@@ -76,6 +78,7 @@ namespace OpenReferrals.Controllers
             return Ok(location);
         }
 
+        [Authorize]
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Location location)

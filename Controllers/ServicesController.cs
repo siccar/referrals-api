@@ -85,6 +85,7 @@ namespace OpenReferrals.Controllers
             return Ok(services);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Service service, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
@@ -118,6 +119,7 @@ namespace OpenReferrals.Controllers
             return Ok(service);
         }
 
+        [Authorize]
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> Put([FromRoute] string id, [FromBody] Service service)
