@@ -1,0 +1,3635 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "SiccarApi"
+  },
+  "paths": {
+    "/registers/{registerId}/reporting/documents/{schemaId}": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Returns the current document progress of all process instances started.",
+        "description": "Includes process instances started by:\r\n- Anyone",
+        "operationId": "GetProcessProgressReports",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The progress reports have been returned",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/InstanceDocumentProgress"
+              }
+            },
+            "examples": {
+              "application/json": {
+                "schema": {
+                  "id": "c102c040-6aa2-42a8-a94a-885d78a59e58",
+                  "version": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                  "title": "A Schema Title",
+                  "description": "A Schema Description",
+                  "fields": [
+                    {
+                      "id": "2b75f84b-d448-4143-aeb8-297ff7be853d",
+                      "isRequired": true,
+                      "minLength": 1,
+                      "maxLength": 500,
+                      "isPublic": true,
+                      "label": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Populate Me"
+                        }
+                      ],
+                      "type": "SingleLineText",
+                      "validation": {
+                        "rules": [
+                          {
+                            "rule": "Not Implemented",
+                            "error": [
+                              {
+                                "culture": "en-GB",
+                                "display": "Not Implemented"
+                              }
+                            ]
+                          }
+                        ],
+                        "regexs": [
+                          {
+                            "rule": "Not Implemented",
+                            "error": [
+                              {
+                                "culture": "en-GB",
+                                "display": "Not Implemented"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "help": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Help Me"
+                        }
+                      ],
+                      "options": [
+                        {
+                          "id": "85a18ef1-0dfb-4773-9773-a66c755d05f9",
+                          "input": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Option 1"
+                            }
+                          ],
+                          "value": "1"
+                        }
+                      ],
+                      "consumableClaimName": "ConsumeMeAsAClaim",
+                      "publishableClaimName": "PublishableClaimName",
+                      "publishableAttestationName": "PublishableAttestationName",
+                      "consumableAttestationName": "ConsumeMeAsAnAttestation",
+                      "consumers": [
+                        "4a52057f-8001-4424-a434-320051c2573a"
+                      ],
+                      "tags": []
+                    }
+                  ],
+                  "steps": [
+                    {
+                      "id": "6d51b619-f9b1-4c91-903a-2af7fa862eee",
+                      "title": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Step Title"
+                        }
+                      ],
+                      "guidanceNotes": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Guidane Notes"
+                        }
+                      ],
+                      "fields": [
+                        "2b75f84b-d448-4143-aeb8-297ff7be853d"
+                      ],
+                      "contributor": "2515d226-0033-4c7d-8c08-00c3aab02d30",
+                      "isSingleUserWallet": false,
+                      "sections": [
+                        {
+                          "id": "3ac4f936-be21-4bc4-9300-ac23d7faf2c5",
+                          "field_ids": [
+                            "2b75f84b-d448-4143-aeb8-297ff7be853d"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "actors": [
+                    {
+                      "id": "2515d226-0033-4c7d-8c08-00c3aab02d30",
+                      "name": "_siccar_actor_wallet_actor1"
+                    }
+                  ],
+                  "archived": false,
+                  "commentaryIsPublic": true,
+                  "publicIdentifierFieldIds": [],
+                  "parentSchemaIds": []
+                },
+                "processInstanceId": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                "stepStatuses": [
+                  {
+                    "stepTransactionId": "9a8ef1a4ae540fba76900fd02ee41d239f03fbcd857b8e8ce2eaf5e64cb0fd7e",
+                    "stepIndex": 0,
+                    "stepTitle": "Step 1",
+                    "completionTime": 1369577597
+                  },
+                  {
+                    "stepTransactionId": "ca740cddd8a39a925cded068ad5fb2c480cb6df3762e6f77ea08b9aca55225a1",
+                    "stepIndex": 1,
+                    "stepTitle": "Step 2",
+                    "completionTime": 1569577597
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/storage/documents/{transactionId}": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Retrieve a document that has been previously written to the ledger.",
+        "description": "Document ids are not the same as step ids.  Each document in a step is stored in different transaction and then linked to the step transaction.",
+        "operationId": "GetDocumentById",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "description": "The transaction id that the document has been stored in.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register the document has been saved to.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document has been found and returned successfully.",
+            "schema": {
+              "$ref": "#/definitions/FileContentResult"
+            }
+          },
+          "400": {
+            "description": "The request is invalid."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "404": {
+            "description": "No document (transcation) exists with provided id."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/processes": {
+      "post": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Create a new instance of a proceess schema on the ledger.",
+        "description": "This will result in the first actor in the process being sent the first step to complete.",
+        "operationId": "StartProcess",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The id of the register.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "processStartRequestModel",
+            "in": "body",
+            "description": "",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ProcessStartRequestModel"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The process has been started.",
+            "schema": {
+              "$ref": "#/definitions/ProcessStep"
+            },
+            "examples": {
+              "application/json": {
+                "stepId": "e6a7348c-6de5-41de-b365-07cc6fc5bab0",
+                "previousStepId": "f1b16b7d-9355-4894-a4af-0419033004f8",
+                "actors": {
+                  "current": "ce4948c0-4c42-4b22-adbf-3ad5598e6f99",
+                  "next": "46e63a08-af2f-4efe-b69b-765a3a8413a6"
+                },
+                "processStepSummary": {
+                  "stepId": "e6a7348c-6de5-41de-b365-07cc6fc5bab0",
+                  "previousStepId": "f1b16b7d-9355-4894-a4af-0419033004f8",
+                  "timestamp": 0,
+                  "schemaId": "2ce77275-334d-43b5-af08-b1133ee2d703",
+                  "schemaStepId": "f1b16b7d-9355-4894-a4af-0419033004f8",
+                  "nextSchemaStepId": "780067b6-b0ee-4460-92f7-8891c2e3af8d",
+                  "nextStepIsLast": true,
+                  "isStepRejection": false,
+                  "isStepProcessDisposal": false,
+                  "isSubmittedWithStepComment": true,
+                  "schemaVersion": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                  "instanceId": "e8792556-895f-46da-8bbf-2f4d80051ef1",
+                  "processIsComplete": false,
+                  "actorId": "cef9bafb-959e-4b54-a4fa-ae9ff20ebe72",
+                  "initialActorId": "e3624d1c-6543-41e7-91d6-7be1248f3213",
+                  "currentStepIndex": 2,
+                  "commentaryIsPublic": true
+                },
+                "fields": {
+                  "public": [
+                    {
+                      "id": "f011136a-0dd8-4a22-9acc-e7292050c9bb",
+                      "value": "public data"
+                    }
+                  ],
+                  "private": [
+                    {
+                      "actorId": "ce4948c0-4c42-4b22-adbf-3ad5598e6f99",
+                      "fields": [
+                        {
+                          "id": "4d9cf86c-8e5d-4870-baf0-43570de0084e",
+                          "value": "data to be encrypted"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "commentHistories": [
+                  {
+                    "sendingStepSchemaId": "f1b16b7d-9355-4894-a4af-0419033004f8",
+                    "recievingStepSchemaId": "7e61653a-caf2-4310-905b-293707ccb710",
+                    "stepComment": "Please resubmit with todays date",
+                    "sendingActorId": "cef9bafb-959e-4b54-a4fa-ae9ff20ebe72",
+                    "timestamp": 1569590421
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "A bad request was received."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/processes/available": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Returns the processes that are available to be started by the user.",
+        "description": "There are two cases where a process can be started by the caller. \r\n1. The actor for step 1 of the schema is SingleUserWallet.\r\n2. The caller is a member of group wallet for Step 1 of the schema.",
+        "operationId": "GetAvailableProcesses",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The id of the register.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The processes available to start were returned.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessSchemaSummary"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "id": "480b3a81-93ad-4bc0-80b9-077df512efda",
+                  "title": "A Process Schema",
+                  "description": "This is a process schema description",
+                  "version": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                  "archived": false
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/process-instances": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Return all process instances for the supplied schema ids.",
+        "operationId": "QueryProcessInstances",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The registerId to find the instances from.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaIds",
+            "in": "query",
+            "description": "Comma separated list of schemas to return the instances for.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results returned successfully.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessInstance"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "id": "83ef6d6f-a748-44c9-ae23-1ffae9b13a60",
+                  "schemaId": "ae1a838d-aee4-4d0b-862c-08c6a0f1436a",
+                  "schemaVersionId": "9ed150cf4b51bb25565d84c3f06afcdd8ec61f417d38bf0d1d1a376366b22f27",
+                  "schemaTitle": "Motor Parts Supply Chain",
+                  "stepZeroTxId": "40690c3576c39ef85216354a1060b1f71ac5e8b3feb2da48f9ce8ed18ad01b37",
+                  "latestStepTxId": "a5537ad9043af0878036d4ffe85b11528af8ff22acef2e87e1b5738732f728e8",
+                  "isComplete": false,
+                  "publicIdentifier": "PO2356 • Harrogate Depot"
+                },
+                {
+                  "id": "83ef6d6f-a748-44c9-ae23-1ffae9b13a60",
+                  "schemaId": "ae1a838d-aee4-4d0b-862c-08c6a0f1436a",
+                  "schemaVersionId": "05cf66f32fac9d888ad6b84504308f7b904b6cb3ca3b20fa8516487add0817c8",
+                  "schemaTitle": "Motor Parts Supply Chain",
+                  "stepZeroTxId": "82219af0deb437da449c631f560375fb55c05aa6bb0abd20940a679bdcda0615",
+                  "latestStepTxId": "b21694a93f54d94e53bcab87eada8c444f713d650421a3cda950be87f978d217",
+                  "isComplete": true,
+                  "publicIdentifier": "PO2410 • London Depot"
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/me": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Return all claims and attestations",
+        "operationId": "Me",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The registerId to find the instances from.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Claim and attestation info."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/reporting/progress": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Returns the current progress of all process instances started by the caller.",
+        "description": "Includes process instances started by:\r\n- The callers single user wallet\r\n- A group wallet which the caller is a member of.",
+        "operationId": "GetProcessProgressReports",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The progress reports have been returned",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessProgressReport"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "schema": {
+                    "id": "057feca7-d9a9-4df7-9e97-8d28cdf2d56b",
+                    "version": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                    "title": "A Schema Title",
+                    "description": "A Schema Description",
+                    "fields": [
+                      {
+                        "id": "dde66592-dc5e-40f7-b3cf-74b53d230397",
+                        "isRequired": true,
+                        "minLength": 1,
+                        "maxLength": 500,
+                        "isPublic": true,
+                        "label": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Populate Me"
+                          }
+                        ],
+                        "type": "SingleLineText",
+                        "validation": {
+                          "rules": [
+                            {
+                              "rule": "Not Implemented",
+                              "error": [
+                                {
+                                  "culture": "en-GB",
+                                  "display": "Not Implemented"
+                                }
+                              ]
+                            }
+                          ],
+                          "regexs": [
+                            {
+                              "rule": "Not Implemented",
+                              "error": [
+                                {
+                                  "culture": "en-GB",
+                                  "display": "Not Implemented"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "help": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Help Me"
+                          }
+                        ],
+                        "options": [
+                          {
+                            "id": "ca7e8f14-0115-4090-9ea6-234a41575c6f",
+                            "input": [
+                              {
+                                "culture": "en-GB",
+                                "display": "Option 1"
+                              }
+                            ],
+                            "value": "1"
+                          }
+                        ],
+                        "consumableClaimName": "ConsumeMeAsAClaim",
+                        "publishableClaimName": "PublishableClaimName",
+                        "publishableAttestationName": "PublishableAttestationName",
+                        "consumableAttestationName": "ConsumeMeAsAnAttestation",
+                        "consumers": [
+                          "0239260c-d2fb-438f-bad1-28524e637e3a"
+                        ],
+                        "tags": []
+                      }
+                    ],
+                    "steps": [
+                      {
+                        "id": "d0d4ee68-023c-42a6-9b05-163a87710f9b",
+                        "title": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Step Title"
+                          }
+                        ],
+                        "guidanceNotes": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Guidane Notes"
+                          }
+                        ],
+                        "fields": [
+                          "dde66592-dc5e-40f7-b3cf-74b53d230397"
+                        ],
+                        "contributor": "3c822f6d-3274-4e1d-8e6e-23ad67b3f054",
+                        "isSingleUserWallet": false,
+                        "sections": [
+                          {
+                            "id": "42e0bc0f-101a-4b8a-9659-d4825f4572ae",
+                            "field_ids": [
+                              "dde66592-dc5e-40f7-b3cf-74b53d230397"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "actors": [
+                      {
+                        "id": "3c822f6d-3274-4e1d-8e6e-23ad67b3f054",
+                        "name": "_siccar_actor_wallet_actor1"
+                      }
+                    ],
+                    "archived": false,
+                    "commentaryIsPublic": true,
+                    "publicIdentifierFieldIds": [],
+                    "parentSchemaIds": []
+                  },
+                  "processInstanceId": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                  "stepStatuses": [
+                    {
+                      "stepTransactionId": "9a8ef1a4ae540fba76900fd02ee41d239f03fbcd857b8e8ce2eaf5e64cb0fd7e",
+                      "stepIndex": 0,
+                      "stepTitle": "Step 1",
+                      "completionTime": 1369577597
+                    },
+                    {
+                      "stepTransactionId": "ca740cddd8a39a925cded068ad5fb2c480cb6df3762e6f77ea08b9aca55225a1",
+                      "stepIndex": 1,
+                      "stepTitle": "Step 2",
+                      "completionTime": 1569577597
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/reporting/progress/{instanceId}": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Returns the current progress of a single instance.",
+        "operationId": "GetProcessProgressReport",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The progress report have been returned",
+            "schema": {
+              "$ref": "#/definitions/ProcessProgressReport"
+            },
+            "examples": {
+              "application/json": {
+                "schema": {
+                  "id": "861da1e3-7a48-4196-9f7e-a28390d80876",
+                  "version": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                  "title": "A Schema Title",
+                  "description": "A Schema Description",
+                  "fields": [
+                    {
+                      "id": "046185d8-3165-403c-92d7-b2adde91c3c0",
+                      "isRequired": true,
+                      "minLength": 1,
+                      "maxLength": 500,
+                      "isPublic": true,
+                      "label": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Populate Me"
+                        }
+                      ],
+                      "type": "SingleLineText",
+                      "validation": {
+                        "rules": [
+                          {
+                            "rule": "Not Implemented",
+                            "error": [
+                              {
+                                "culture": "en-GB",
+                                "display": "Not Implemented"
+                              }
+                            ]
+                          }
+                        ],
+                        "regexs": [
+                          {
+                            "rule": "Not Implemented",
+                            "error": [
+                              {
+                                "culture": "en-GB",
+                                "display": "Not Implemented"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "help": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Help Me"
+                        }
+                      ],
+                      "options": [
+                        {
+                          "id": "ed397bb3-05b6-4a89-93f5-2214226120d2",
+                          "input": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Option 1"
+                            }
+                          ],
+                          "value": "1"
+                        }
+                      ],
+                      "consumableClaimName": "ConsumeMeAsAClaim",
+                      "publishableClaimName": "PublishableClaimName",
+                      "publishableAttestationName": "PublishableAttestationName",
+                      "consumableAttestationName": "ConsumeMeAsAnAttestation",
+                      "consumers": [
+                        "af710bca-3a61-46c3-a091-f1ee99cb09fd"
+                      ],
+                      "tags": []
+                    }
+                  ],
+                  "steps": [
+                    {
+                      "id": "20fef404-9f18-4791-811b-2558559edf81",
+                      "title": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Step Title"
+                        }
+                      ],
+                      "guidanceNotes": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Guidane Notes"
+                        }
+                      ],
+                      "fields": [
+                        "046185d8-3165-403c-92d7-b2adde91c3c0"
+                      ],
+                      "contributor": "9f4a886b-5845-4c65-bf68-b8e5d09bad28",
+                      "isSingleUserWallet": false,
+                      "sections": [
+                        {
+                          "id": "6efddad2-3b6d-4c0c-a41e-21fa366dc8b7",
+                          "field_ids": [
+                            "046185d8-3165-403c-92d7-b2adde91c3c0"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "actors": [
+                    {
+                      "id": "9f4a886b-5845-4c65-bf68-b8e5d09bad28",
+                      "name": "_siccar_actor_wallet_actor1"
+                    }
+                  ],
+                  "archived": false,
+                  "commentaryIsPublic": true,
+                  "publicIdentifierFieldIds": [],
+                  "parentSchemaIds": []
+                },
+                "processInstanceId": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                "stepStatuses": [
+                  {
+                    "stepTransactionId": "9a8ef1a4ae540fba76900fd02ee41d239f03fbcd857b8e8ce2eaf5e64cb0fd7e",
+                    "stepIndex": 0,
+                    "stepTitle": "Step 1",
+                    "completionTime": 1369577597
+                  },
+                  {
+                    "stepTransactionId": "ca740cddd8a39a925cded068ad5fb2c480cb6df3762e6f77ea08b9aca55225a1",
+                    "stepIndex": 1,
+                    "stepTitle": "Step 2",
+                    "completionTime": 1569577597
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/process-schemas": {
+      "get": {
+        "tags": [
+          "Designer"
+        ],
+        "summary": "Returns all saved, published and archived processes schema summaries.",
+        "operationId": "GetAllProcesses",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register id to get processes from.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All schemas have been returned successfully.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessSchemaSummary"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "id": "2abf2363-0d73-44a9-9e73-12139f7938f7",
+                  "title": "A Process Schema",
+                  "description": "This is a process schema description",
+                  "version": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                  "archived": false
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorised to call this endpoint."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Designer"
+        ],
+        "summary": "Saves the provided process schema.",
+        "description": "If this is the first time saving the schema the id should be set to \"FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF\", this will result in a new schema being saved.  Id an existing id is provided then any existing schema with the id will be updated.",
+        "operationId": "SaveProcess",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register id to save the process to.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "body",
+            "description": "The Process Schema to be saved.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ProcessSchemaModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Process has been saved successfully."
+          },
+          "400": {
+            "description": "Submitted schema is not valid for saving."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorised to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/process-schemas/{id}": {
+      "get": {
+        "tags": [
+          "Designer"
+        ],
+        "summary": "Returns the latest version of the schema, saved, published or archived, with the given id.",
+        "description": "If the schema has been published it will return the latest published version.\r\nif it has not been published it will return the latest saved version",
+        "operationId": "GetProcessById",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register id to fetch the process from.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the schema to fetch.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All schemas have been returned",
+            "schema": {
+              "$ref": "#/definitions/ProcessSchemaModel"
+            },
+            "examples": {
+              "application/json": {
+                "id": "7a011e77-762d-4f52-8578-a351cc3789ec",
+                "version": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                "title": "A Schema Title",
+                "description": "A Schema Description",
+                "fields": [
+                  {
+                    "id": "b7612323-4a07-4d13-afb5-316fd9eaaf07",
+                    "isRequired": true,
+                    "minLength": 1,
+                    "maxLength": 500,
+                    "isPublic": true,
+                    "label": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Populate Me"
+                      }
+                    ],
+                    "type": "SingleLineText",
+                    "validation": {
+                      "rules": [
+                        {
+                          "rule": "Not Implemented",
+                          "error": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Not Implemented"
+                            }
+                          ]
+                        }
+                      ],
+                      "regexs": [
+                        {
+                          "rule": "Not Implemented",
+                          "error": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Not Implemented"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "help": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Help Me"
+                      }
+                    ],
+                    "options": [
+                      {
+                        "id": "85208016-290f-481a-a4ce-6d276624d5eb",
+                        "input": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Option 1"
+                          }
+                        ],
+                        "value": "1"
+                      }
+                    ],
+                    "consumableClaimName": "ConsumeMeAsAClaim",
+                    "publishableClaimName": "PublishableClaimName",
+                    "publishableAttestationName": "PublishableAttestationName",
+                    "consumableAttestationName": "ConsumeMeAsAnAttestation",
+                    "consumers": [
+                      "a4590493-41cc-4db0-8444-ee944bdf2f1c"
+                    ],
+                    "tags": []
+                  }
+                ],
+                "steps": [
+                  {
+                    "id": "e485067b-fa6a-4510-ae66-6b0408387977",
+                    "title": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Step Title"
+                      }
+                    ],
+                    "guidanceNotes": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Guidane Notes"
+                      }
+                    ],
+                    "fields": [
+                      "b7612323-4a07-4d13-afb5-316fd9eaaf07"
+                    ],
+                    "contributor": "5f79702a-001d-412f-a684-fb6a5734450d",
+                    "isSingleUserWallet": false,
+                    "sections": [
+                      {
+                        "id": "570ddf64-dd86-42b7-b1f6-47c39a74ffe8",
+                        "field_ids": [
+                          "b7612323-4a07-4d13-afb5-316fd9eaaf07"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "actors": [
+                  {
+                    "id": "5f79702a-001d-412f-a684-fb6a5734450d",
+                    "name": "_siccar_actor_wallet_actor1"
+                  }
+                ],
+                "archived": false,
+                "commentaryIsPublic": true,
+                "publicIdentifierFieldIds": [],
+                "parentSchemaIds": []
+              }
+            }
+          },
+          "400": {
+            "description": "The request is invalid."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorised to call this endpoint."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Designer"
+        ],
+        "summary": "Delete a saved process schema.",
+        "description": "This is irreversible.  Only schemas that have not yet been published can be saved.",
+        "operationId": "Delete",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register id to delete the process from.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the schema to delete",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The schema has been deleted successfully."
+          },
+          "400": {
+            "description": "The request is invalid."
+          },
+          "401": {
+            "description": "User is not authenticated to call this endpoint."
+          },
+          "403": {
+            "description": "User is not authorised to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/storage/schemas/{schemaVersionId}": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Returns the process schema for the given version ID",
+        "operationId": "GetSchemaByVersion",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register id to fetch the process from.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaVersionId",
+            "in": "path",
+            "description": "The version id of the process to fetch.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The schema with the given version.",
+            "schema": {
+              "$ref": "#/definitions/ProcessSchemaModel"
+            },
+            "examples": {
+              "application/json": {
+                "id": "713d4960-3882-4e66-9643-ca15854caa6b",
+                "version": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                "title": "A Schema Title",
+                "description": "A Schema Description",
+                "fields": [
+                  {
+                    "id": "8563c51e-49b6-486b-a22b-567d923f148c",
+                    "isRequired": true,
+                    "minLength": 1,
+                    "maxLength": 500,
+                    "isPublic": true,
+                    "label": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Populate Me"
+                      }
+                    ],
+                    "type": "SingleLineText",
+                    "validation": {
+                      "rules": [
+                        {
+                          "rule": "Not Implemented",
+                          "error": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Not Implemented"
+                            }
+                          ]
+                        }
+                      ],
+                      "regexs": [
+                        {
+                          "rule": "Not Implemented",
+                          "error": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Not Implemented"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "help": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Help Me"
+                      }
+                    ],
+                    "options": [
+                      {
+                        "id": "cd6b6358-2730-42dc-b594-134d0c76edcb",
+                        "input": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Option 1"
+                          }
+                        ],
+                        "value": "1"
+                      }
+                    ],
+                    "consumableClaimName": "ConsumeMeAsAClaim",
+                    "publishableClaimName": "PublishableClaimName",
+                    "publishableAttestationName": "PublishableAttestationName",
+                    "consumableAttestationName": "ConsumeMeAsAnAttestation",
+                    "consumers": [
+                      "0b9df32f-edc7-492c-a52a-a2bc73ed39b3"
+                    ],
+                    "tags": []
+                  }
+                ],
+                "steps": [
+                  {
+                    "id": "31fa3016-aa73-4eb1-be42-f6cba407bc27",
+                    "title": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Step Title"
+                      }
+                    ],
+                    "guidanceNotes": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Guidane Notes"
+                      }
+                    ],
+                    "fields": [
+                      "8563c51e-49b6-486b-a22b-567d923f148c"
+                    ],
+                    "contributor": "f68a66c9-d126-427b-a6cd-ed72af241e85",
+                    "isSingleUserWallet": false,
+                    "sections": [
+                      {
+                        "id": "f1240981-38e0-469d-b714-72e1ffcb1b02",
+                        "field_ids": [
+                          "8563c51e-49b6-486b-a22b-567d923f148c"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "actors": [
+                  {
+                    "id": "f68a66c9-d126-427b-a6cd-ed72af241e85",
+                    "name": "_siccar_actor_wallet_actor1"
+                  }
+                ],
+                "archived": false,
+                "commentaryIsPublic": true,
+                "publicIdentifierFieldIds": [],
+                "parentSchemaIds": []
+              }
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "404": {
+            "description": "The schema with the given version could not be found."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/process-schemas-claims": {
+      "get": {
+        "tags": [
+          "Designer"
+        ],
+        "summary": "Get all publishable claims from all published schemas.",
+        "operationId": "GetAllProcessSchemaPublishableClaims",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register id to fetch processes from.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The claims have been returned successfully.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessSchemaPublishableClaim"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "publishableClaimName": "Publishable Claim Name",
+                  "fieldType": 1
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorised to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/process-schemas-attestations": {
+      "get": {
+        "tags": [
+          "Designer"
+        ],
+        "summary": "Get all publishable attestations from all published schemas.",
+        "operationId": "GetAllProcessSchemaPublishableAttestations",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register id to fetch processes from.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The attestations have been returned successfully.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessSchemaPublishableAttestation"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "publishableAttestationName": "Attestation Name",
+                  "fieldType": 1
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorised to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/process-schemas/publish": {
+      "post": {
+        "tags": [
+          "Designer"
+        ],
+        "summary": "Publish a provided schema so that instances can be started and executed.",
+        "operationId": "Publish",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register id to publish the process to.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "body",
+            "description": "The schema to publish",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ProcessSchemaModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The schema has been published succesfully."
+          },
+          "400": {
+            "description": "The schema is not valid for publishing."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorised to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/public-data": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Query public data added in all steps.",
+        "description": "",
+        "operationId": "QueryPublicData",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register to search in.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "querystring",
+            "in": "query",
+            "description": "The string to search for.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results returned successfully.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PublicProcessDataSearchResult"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "transactionHash": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                  "schemaTitle": "Schema Title",
+                  "matches": [
+                    {
+                      "fieldOrStepTitle": "Step 1",
+                      "value": "Matched String"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/steps/next": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Returns the actions that are currently available for the caller to complete.",
+        "operationId": "GetNextSteps",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The id of the register.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The next available actions have been returned to the caller",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RequiredStep"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "summary": {
+                    "title": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Title"
+                      }
+                    ],
+                    "guidanceNotes": [
+                      {
+                        "culture": "en-GB",
+                        "display": "Guidance Notes"
+                      }
+                    ],
+                    "schemaId": "291424aa-8805-4286-9b6f-0401edbd6f1a",
+                    "schemaVersionId": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                    "schemaStepIndex": 0,
+                    "processInstanceId": "31f1e03a-e3b3-450e-9f1a-930b995333f6",
+                    "previousStepId": "c2dbfbf7-ee8c-4747-aa8d-a562042c62b9",
+                    "schemaTitle": "Schema Title",
+                    "commentaryIsPublic": false,
+                    "isLastStep": false
+                  },
+                  "fields": {
+                    "target": [
+                      {
+                        "schemaField": {
+                          "id": "3ed3d5bc-67f0-4403-94fd-8e508ec77290",
+                          "isRequired": true,
+                          "minLength": 1,
+                          "maxLength": 500,
+                          "isPublic": true,
+                          "label": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Populate Me"
+                            }
+                          ],
+                          "type": "SingleLineText",
+                          "validation": {
+                            "rules": [
+                              {
+                                "rule": "Not Implemented",
+                                "error": [
+                                  {
+                                    "culture": "en-GB",
+                                    "display": "Not Implemented"
+                                  }
+                                ]
+                              }
+                            ],
+                            "regexs": [
+                              {
+                                "rule": "Not Implemented",
+                                "error": [
+                                  {
+                                    "culture": "en-GB",
+                                    "display": "Not Implemented"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "help": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Help Me"
+                            }
+                          ],
+                          "options": [
+                            {
+                              "id": "9146a84c-7345-4df9-9249-8b516c1c100d",
+                              "input": [
+                                {
+                                  "culture": "en-GB",
+                                  "display": "Option 1"
+                                }
+                              ],
+                              "value": "1"
+                            }
+                          ],
+                          "consumableClaimName": "ConsumeMeAsAClaim",
+                          "publishableClaimName": "PublishableClaimName",
+                          "publishableAttestationName": "PublishableAttestationName",
+                          "consumableAttestationName": "ConsumeMeAsAnAttestation",
+                          "consumers": [
+                            "ecb634af-a0fb-4170-92a9-37473a1810ae"
+                          ],
+                          "tags": []
+                        },
+                        "mostRecentValue": "MostRecentValue",
+                        "mostRecentlyRejectedValue": "MostRecentlyRejectedValue"
+                      }
+                    ],
+                    "fulfilled": [
+                      {
+                        "id": "0a63a6f1-c4d3-473f-a027-5189ecad554d",
+                        "label": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Enter Data"
+                          }
+                        ],
+                        "type": "SingleLineText",
+                        "value": "Test",
+                        "help": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Help Me"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "id": "91ec088d-0161-4461-acde-16f1d890fdaa",
+                      "field_ids": [
+                        "b1c69ba2-3b35-4e92-bbfd-aaab228826fd"
+                      ]
+                    }
+                  ],
+                  "comments": [
+                    {
+                      "sendingActorName": "0731da30-28c6-43f6-b60a-1a3c1068e83a",
+                      "receivingActorName": "You",
+                      "commentText": "Hello",
+                      "isReceivedComment": true
+                    }
+                  ],
+                  "wasPreviouslyRejected": false,
+                  "wasSubmittedWithComment": false
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "The caller is not authenticated."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/steps/{id}/next": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Returns a required step given the id of a previously completed step.",
+        "description": "A required step contains the fields that need to be completd when submitted the step.",
+        "operationId": "GetNextStep",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The id of the register.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the previously completed step to return the next require step for.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The required step has be succesfully built.",
+            "schema": {
+              "$ref": "#/definitions/RequiredStep"
+            },
+            "examples": {
+              "application/json": {
+                "summary": {
+                  "title": [
+                    {
+                      "culture": "en-GB",
+                      "display": "Title"
+                    }
+                  ],
+                  "guidanceNotes": [
+                    {
+                      "culture": "en-GB",
+                      "display": "Guidance Notes"
+                    }
+                  ],
+                  "schemaId": "a9528bc1-b3c3-41af-ab55-35327ed62add",
+                  "schemaVersionId": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                  "schemaStepIndex": 0,
+                  "processInstanceId": "a8978935-320f-48dc-89f7-848d94a2e074",
+                  "previousStepId": "898f4afa-41e1-4c78-8623-7605f6558ce1",
+                  "schemaTitle": "Schema Title",
+                  "commentaryIsPublic": false,
+                  "isLastStep": false
+                },
+                "fields": {
+                  "target": [
+                    {
+                      "schemaField": {
+                        "id": "4e3d03e9-d3d2-4d92-91ac-8d553b94b4e9",
+                        "isRequired": true,
+                        "minLength": 1,
+                        "maxLength": 500,
+                        "isPublic": true,
+                        "label": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Populate Me"
+                          }
+                        ],
+                        "type": "SingleLineText",
+                        "validation": {
+                          "rules": [
+                            {
+                              "rule": "Not Implemented",
+                              "error": [
+                                {
+                                  "culture": "en-GB",
+                                  "display": "Not Implemented"
+                                }
+                              ]
+                            }
+                          ],
+                          "regexs": [
+                            {
+                              "rule": "Not Implemented",
+                              "error": [
+                                {
+                                  "culture": "en-GB",
+                                  "display": "Not Implemented"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "help": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Help Me"
+                          }
+                        ],
+                        "options": [
+                          {
+                            "id": "2891d9c6-f3ba-4c4d-92bc-a67c78d50acd",
+                            "input": [
+                              {
+                                "culture": "en-GB",
+                                "display": "Option 1"
+                              }
+                            ],
+                            "value": "1"
+                          }
+                        ],
+                        "consumableClaimName": "ConsumeMeAsAClaim",
+                        "publishableClaimName": "PublishableClaimName",
+                        "publishableAttestationName": "PublishableAttestationName",
+                        "consumableAttestationName": "ConsumeMeAsAnAttestation",
+                        "consumers": [
+                          "d32c1569-205e-48d0-be5e-873ec96a75c6"
+                        ],
+                        "tags": []
+                      },
+                      "mostRecentValue": "MostRecentValue",
+                      "mostRecentlyRejectedValue": "MostRecentlyRejectedValue"
+                    }
+                  ],
+                  "fulfilled": [
+                    {
+                      "id": "0a63a6f1-c4d3-473f-a027-5189ecad554d",
+                      "label": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Enter Data"
+                        }
+                      ],
+                      "type": "SingleLineText",
+                      "value": "Test",
+                      "help": [
+                        {
+                          "culture": "en-GB",
+                          "display": "Help Me"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "sections": [
+                  {
+                    "id": "5b06942f-6dc8-4cf3-9646-5864d02e2410",
+                    "field_ids": [
+                      "0fb62da6-47a4-4214-860f-9d8c7808e2e8"
+                    ]
+                  }
+                ],
+                "comments": [
+                  {
+                    "sendingActorName": "0731da30-28c6-43f6-b60a-1a3c1068e83a",
+                    "receivingActorName": "You",
+                    "commentText": "Hello",
+                    "isReceivedComment": true
+                  }
+                ],
+                "wasPreviouslyRejected": false,
+                "wasSubmittedWithComment": false
+              }
+            }
+          },
+          "400": {
+            "description": "A bad request was received."
+          },
+          "401": {
+            "description": "The caller is not authenticated."
+          },
+          "403": {
+            "description": "The caller is not authorized to call this endpoint."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Submit a step fullfilment for a step in a process instance.",
+        "description": "This will result in the actor for the next step in the process getting an action.",
+        "operationId": "SubmitStepFulfillment",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The id of the register.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the preevious step in the process instance.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "stepFulfillment",
+            "in": "body",
+            "description": "The completed step fulfillment.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/StepFulfillment"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The fulfillment has been submited successfully."
+          },
+          "400": {
+            "description": "A bad request was received."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorized to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/steps/{id}/save-next": {
+      "post": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Allows a step fulfilment to to be saved for later submission.",
+        "description": "When you retrieve the required step from the GET steps/{id}/next endpoint, any saved step data will be included as the \"mostRecentValue\" against the target fields.",
+        "operationId": "SaveStepFulfillment",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The id of the register.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the previous step.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "stepFulfillment",
+            "in": "body",
+            "description": "The step fulfillment to save.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/StepFulfillment"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Step has been saved successfully."
+          },
+          "400": {
+            "description": "A bad request was received."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorized to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/steps/{id}/reject": {
+      "post": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Submit a step rejection for a step in a process instance.",
+        "description": "This results in the actor for the previous step getting an action.",
+        "operationId": "SubmitStepRejection",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The id of the register.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the step that is being rejected.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "stepRejection",
+            "in": "body",
+            "description": "Contains an optional comment as to why the step is being rejected.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/StepRejection"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Returns a confirmation that the request has been accepted"
+          },
+          "400": {
+            "description": "A bad request was received."
+          },
+          "401": {
+            "description": "User is not authenticated to call this endpoint."
+          },
+          "403": {
+            "description": "User is not authorized to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/steps/{id}/dispose-process": {
+      "post": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Submit a cancellation request so that the process instance is not continued.",
+        "description": "This is irreversible, i.e. once a process has been cancelled there is no way of continuing it.\r\nA process can only be cancelled from the first step.\r\nNo data will be deleted i.e. all previous transactions will still be viewable and public data in them will still be searchable.\r\nThe step will be sent to a dead letter wallet so that no actors in the system have an action for the process instance.",
+        "operationId": "SubmitProcessCancellation",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The id of the register.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the process to dispose of",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The process has been successfully canceled."
+          },
+          "400": {
+            "description": "A bad request was received."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "403": {
+            "description": "Caller is not authorized to call this endpoint."
+          }
+        }
+      }
+    },
+    "/registers/{registerId}/transactions/{id}": {
+      "get": {
+        "tags": [
+          "Executor"
+        ],
+        "summary": "Get a transaction by id.",
+        "operationId": "GetTransactionById",
+        "consumes": [],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The transaction id to look for.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "registerId",
+            "in": "path",
+            "description": "The register the transaction is saved on.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The transaction has been found and returned.",
+            "schema": {
+              "$ref": "#/definitions/TransactionReport"
+            },
+            "examples": {
+              "application/json": {
+                "summary": {
+                  "timestamp": 1570111988,
+                  "id": "f4fa20a5-1372-48c5-aa93-e389c742dee7",
+                  "sender": "a6ab6fde-8d37-4521-83bb-c79e50ba64e7",
+                  "recipient": "f7c5a9b0-40e1-453c-8e7b-a0eee7854c7f",
+                  "previous": [
+                    "a1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d"
+                  ],
+                  "previousDataTxId": "a1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d",
+                  "isCoinbase": false
+                },
+                "nextTransactionId": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+                "payload": {
+                  "public": {
+                    "originalJson": "{}",
+                    "fields": [
+                      {
+                        "id": "a07021a8-594d-4dc1-b6ff-46c282447c65",
+                        "label": [
+                          {
+                            "culture": "en-GB",
+                            "display": "Please enter name"
+                          }
+                        ],
+                        "type": "SingleLineText",
+                        "value": "Stewart"
+                      }
+                    ]
+                  },
+                  "private": [
+                    {
+                      "actorId": "f7c5a9b0-40e1-453c-8e7b-a0eee7854c7f",
+                      "actorName": "_siccar_actor_wallet_first_actor",
+                      "originalPayloads": [],
+                      "fields": [
+                        {
+                          "id": "a07021a8-594d-4dc1-b6ff-46c282447c65",
+                          "label": [
+                            {
+                              "culture": "en-GB",
+                              "display": "Please enter name"
+                            }
+                          ],
+                          "type": "SingleLineText",
+                          "value": "Stewart"
+                        }
+                      ],
+                      "isDecrypted": false
+                    }
+                  ]
+                },
+                "stepComments": [
+                  {
+                    "sendingActorName": "a6ab6fde-8d37-4521-83bb-c79e50ba64e7",
+                    "receivingActorName": "f7c5a9b0-40e1-453c-8e7b-a0eee7854c7f",
+                    "commentText": "I am a comment",
+                    "isDecrypted": true,
+                    "rawData": "Raw Data",
+                    "isPublicComment": true,
+                    "timestamp": 1570111988
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Supplied id is not valid transaction id."
+          },
+          "401": {
+            "description": "Caller is not authenticated."
+          },
+          "404": {
+            "description": "A transaction matching the ID could not be found."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "InstanceDocumentProgress": {
+      "type": "object",
+      "properties": {
+        "instanceId": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "uniqueInstanceId": {
+          "type": "string"
+        },
+        "nextSchemaStepId": {
+          "type": "string"
+        },
+        "processIsComplete": {
+          "type": "boolean"
+        },
+        "documentStatuses": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DocumentStatus"
+          }
+        },
+        "firstStepPublicFields": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FirstStepPublicField"
+          }
+        }
+      }
+    },
+    "DocumentStatus": {
+      "type": "object",
+      "properties": {
+        "schemaFieldId": {
+          "type": "string"
+        },
+        "schemaFieldLabel": {
+          "type": "string"
+        },
+        "transactionId": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "isUploaded": {
+          "type": "boolean"
+        },
+        "isRequired": {
+          "type": "boolean"
+        },
+        "tags": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "FirstStepPublicField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "type": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "type": "integer"
+        }
+      }
+    },
+    "FileContentResult": {
+      "type": "object",
+      "properties": {
+        "fileContents": {
+          "format": "byte",
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string",
+          "readOnly": true
+        },
+        "fileDownloadName": {
+          "type": "string"
+        },
+        "lastModified": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "entityTag": {
+          "$ref": "#/definitions/EntityTagHeaderValue"
+        },
+        "enableRangeProcessing": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EntityTagHeaderValue": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "$ref": "#/definitions/StringSegment",
+          "readOnly": true
+        },
+        "isWeak": {
+          "type": "boolean",
+          "readOnly": true
+        }
+      }
+    },
+    "StringSegment": {
+      "type": "object",
+      "properties": {
+        "buffer": {
+          "type": "string",
+          "readOnly": true
+        },
+        "offset": {
+          "format": "int32",
+          "type": "integer",
+          "readOnly": true
+        },
+        "length": {
+          "format": "int32",
+          "type": "integer",
+          "readOnly": true
+        },
+        "value": {
+          "type": "string",
+          "readOnly": true
+        },
+        "hasValue": {
+          "type": "boolean",
+          "readOnly": true
+        }
+      }
+    },
+    "ProcessStartRequestModel": {
+      "type": "object",
+      "properties": {
+        "schemaId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "schemaVersionId": {
+          "pattern": "^[a-fA-F0-9]*$",
+          "type": "string"
+        },
+        "parentInstanceId": {
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        }
+      },
+      "example": {
+        "schemaId": "29d1a1cd-81b4-462c-b185-51d5e2584eaa",
+        "schemaVersionId": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+        "parentInstanceId": "ed85742afb2299c91cfbdd6ed93469f6e0be7fc92050e530e34848a89d6e7612"
+      }
+    },
+    "ProcessStep": {
+      "type": "object",
+      "properties": {
+        "stepId": {
+          "pattern": "^[a-fA-F0-9]*$",
+          "type": "string"
+        },
+        "previousStepId": {
+          "pattern": "^[a-fA-F0-9]*$",
+          "type": "string"
+        },
+        "actors": {
+          "$ref": "#/definitions/ProcessActors"
+        },
+        "processStepSummary": {
+          "$ref": "#/definitions/ProcessStepSummary"
+        },
+        "fields": {
+          "$ref": "#/definitions/FieldAssignments"
+        },
+        "commentHistories": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessStepCommentHistory"
+          }
+        },
+        "documentTransactionIds": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ProcessActors": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "next": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessStepSummary": {
+      "type": "object",
+      "properties": {
+        "stepId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "previousStepId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "schemaId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "schemaStepId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "nextSchemaStepId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "nextStepIsLast": {
+          "type": "boolean"
+        },
+        "isStepRejection": {
+          "type": "boolean"
+        },
+        "isStepProcessDisposal": {
+          "type": "boolean"
+        },
+        "isSubmittedWithStepComment": {
+          "type": "boolean"
+        },
+        "schemaVersion": {
+          "pattern": "^[a-fA-F0-9]*$",
+          "type": "string"
+        },
+        "instanceId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "processIsComplete": {
+          "type": "boolean"
+        },
+        "actorId": {
+          "type": "string"
+        },
+        "initialActorId": {
+          "type": "string"
+        },
+        "currentStepIndex": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "commentaryIsPublic": {
+          "type": "boolean"
+        },
+        "parentInstanceId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        }
+      }
+    },
+    "FieldAssignments": {
+      "type": "object",
+      "properties": {
+        "public": {
+          "maxLength": 500,
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldValuePair"
+          }
+        },
+        "private": {
+          "maxLength": 500,
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PrivateFieldsAssignment"
+          }
+        }
+      }
+    },
+    "ProcessStepCommentHistory": {
+      "type": "object",
+      "properties": {
+        "sendingStepSchemaId": {
+          "type": "string"
+        },
+        "recievingStepSchemaId": {
+          "type": "string"
+        },
+        "stepComment": {
+          "type": "string"
+        },
+        "sendingActorId": {
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "int64",
+          "type": "integer"
+        }
+      }
+    },
+    "FieldValuePair": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "verification_url": {
+          "type": "string"
+        }
+      }
+    },
+    "PrivateFieldsAssignment": {
+      "type": "object",
+      "properties": {
+        "actorId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "fields": {
+          "maxLength": 500,
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldValuePair"
+          }
+        }
+      }
+    },
+    "ProcessSchemaSummary": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "archived": {
+          "type": "boolean"
+        },
+        "parentSchemaIds": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "publicIdentifierFieldIds": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ProcessInstance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "schemaId": {
+          "type": "string"
+        },
+        "schemaVersionId": {
+          "type": "string"
+        },
+        "schemaTitle": {
+          "type": "string"
+        },
+        "stepZeroTxId": {
+          "type": "string"
+        },
+        "latestStepTxId": {
+          "type": "string"
+        },
+        "isComplete": {
+          "type": "boolean"
+        },
+        "publicIdentifier": {
+          "type": "string"
+        }
+      }
+    },
+    "ProcessProgressReport": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "#/definitions/ProcessSchemaModel"
+        },
+        "processInstanceId": {
+          "type": "string"
+        },
+        "stepStatuses": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StepStatus"
+          }
+        },
+        "mostRecentActivityTimestamp": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "ProcessSchemaModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "fields": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessField"
+          }
+        },
+        "steps": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessSchemaStep"
+          }
+        },
+        "actors": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessActor"
+          }
+        },
+        "archived": {
+          "type": "boolean"
+        },
+        "commentaryIsPublic": {
+          "type": "boolean"
+        },
+        "publicIdentifierFieldIds": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "parentSchemaIds": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          }
+        }
+      },
+      "example": {
+        "id": "45e34250-93d6-4bd1-b900-bf97aa020dd0",
+        "version": "1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7",
+        "title": "A Schema Title",
+        "description": "A Schema Description",
+        "fields": [
+          {
+            "id": "f26f32dc-27a1-49cd-be8b-69ceeec0d61f",
+            "isRequired": true,
+            "minLength": 1,
+            "maxLength": 500,
+            "isPublic": true,
+            "label": [
+              {
+                "culture": "en-GB",
+                "display": "Populate Me"
+              }
+            ],
+            "type": "SingleLineText",
+            "validation": {
+              "rules": [
+                {
+                  "rule": "Not Implemented",
+                  "error": [
+                    {
+                      "culture": "en-GB",
+                      "display": "Not Implemented"
+                    }
+                  ]
+                }
+              ],
+              "regexs": [
+                {
+                  "rule": "Not Implemented",
+                  "error": [
+                    {
+                      "culture": "en-GB",
+                      "display": "Not Implemented"
+                    }
+                  ]
+                }
+              ]
+            },
+            "help": [
+              {
+                "culture": "en-GB",
+                "display": "Help Me"
+              }
+            ],
+            "options": [
+              {
+                "id": "dd582d2a-7506-45a7-96ef-678b0e0b733b",
+                "input": [
+                  {
+                    "culture": "en-GB",
+                    "display": "Option 1"
+                  }
+                ],
+                "value": "1"
+              }
+            ],
+            "consumableClaimName": "ConsumeMeAsAClaim",
+            "publishableClaimName": "PublishableClaimName",
+            "publishableAttestationName": "PublishableAttestationName",
+            "consumableAttestationName": "ConsumeMeAsAnAttestation",
+            "consumers": [
+              "9a5c0ad5-bcdd-4cba-ae00-18c1b61dbc2c"
+            ],
+            "tags": []
+          }
+        ],
+        "steps": [
+          {
+            "id": "25d896a3-f939-43b0-982a-f900da573c85",
+            "title": [
+              {
+                "culture": "en-GB",
+                "display": "Step Title"
+              }
+            ],
+            "guidanceNotes": [
+              {
+                "culture": "en-GB",
+                "display": "Guidane Notes"
+              }
+            ],
+            "fields": [
+              "f26f32dc-27a1-49cd-be8b-69ceeec0d61f"
+            ],
+            "contributor": "6464fab1-6dc1-4912-be33-a2542fdb1585",
+            "isSingleUserWallet": false,
+            "sections": [
+              {
+                "id": "93afc63f-4ba3-46af-92e7-79e9cf3120f9",
+                "field_ids": [
+                  "f26f32dc-27a1-49cd-be8b-69ceeec0d61f"
+                ]
+              }
+            ]
+          }
+        ],
+        "actors": [
+          {
+            "id": "6464fab1-6dc1-4912-be33-a2542fdb1585",
+            "name": "_siccar_actor_wallet_actor1"
+          }
+        ],
+        "archived": false,
+        "commentaryIsPublic": true,
+        "publicIdentifierFieldIds": [],
+        "parentSchemaIds": []
+      }
+    },
+    "StepStatus": {
+      "type": "object",
+      "properties": {
+        "stepTransactionId": {
+          "type": "string"
+        },
+        "stepIndex": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "stepTitle": {
+          "type": "string"
+        },
+        "completionTime": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "stepId": {
+          "type": "string"
+        }
+      }
+    },
+    "ProcessField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "alias": {
+          "type": "string"
+        },
+        "isRequired": {
+          "type": "boolean"
+        },
+        "minLength": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "maxLength": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isPublic": {
+          "type": "boolean"
+        },
+        "label": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "type": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "type": "integer"
+        },
+        "validation": {
+          "$ref": "#/definitions/ProcessFieldValidation"
+        },
+        "help": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "options": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessFieldOption"
+          }
+        },
+        "consumableClaimName": {
+          "type": "string"
+        },
+        "publishableClaimName": {
+          "type": "string"
+        },
+        "publishableAttestationName": {
+          "type": "string"
+        },
+        "consumableAttestationName": {
+          "type": "string"
+        },
+        "consumers": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "tags": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ProcessSchemaStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "title": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "guidanceNotes": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "fields": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "contributor": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "isSingleUserWallet": {
+          "type": "boolean"
+        },
+        "sections": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessSection"
+          }
+        },
+        "branchCondition": {
+          "$ref": "#/definitions/ProcessSchemaStepBranchCondition"
+        }
+      }
+    },
+    "ProcessActor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "MultiLanguageLabel": {
+      "type": "object",
+      "properties": {
+        "culture": {
+          "type": "string"
+        },
+        "display": {
+          "type": "string"
+        }
+      }
+    },
+    "ProcessFieldValidation": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessValidationImpl"
+          }
+        },
+        "regexs": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessValidationImpl"
+          }
+        }
+      }
+    },
+    "ProcessFieldOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "input": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ProcessSection": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "field_ids": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "guidanceNotes": {
+          "type": "string"
+        }
+      }
+    },
+    "ProcessSchemaStepBranchCondition": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "format": "int32",
+          "enum": [
+            0,
+            1,
+            2
+          ],
+          "type": "integer"
+        },
+        "stepId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "fieldId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "finishWhenFieldIsFalse": {
+          "type": "boolean"
+        },
+        "stepIdWhenFieldIsFalse": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "finishWhenFieldIsTrue": {
+          "type": "boolean"
+        },
+        "stepIdWhenFieldIsTrue": {
+          "format": "uuid",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessValidationImpl": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "error": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        }
+      }
+    },
+    "ProcessSchemaPublishableClaim": {
+      "type": "object",
+      "properties": {
+        "publishableClaimName": {
+          "type": "string"
+        },
+        "fieldType": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "type": "integer"
+        }
+      }
+    },
+    "ProcessSchemaPublishableAttestation": {
+      "type": "object",
+      "properties": {
+        "publishableAttestationName": {
+          "type": "string"
+        },
+        "fieldType": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "type": "integer"
+        }
+      }
+    },
+    "PublicProcessDataSearchResult": {
+      "type": "object",
+      "properties": {
+        "transactionHash": {
+          "type": "string"
+        },
+        "schemaTitle": {
+          "type": "string"
+        },
+        "matches": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PublicProcessDataSearchInstanceMatch"
+          }
+        }
+      }
+    },
+    "PublicProcessDataSearchInstanceMatch": {
+      "type": "object",
+      "properties": {
+        "fieldOrStepTitle": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "RequiredStep": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "$ref": "#/definitions/RequiredStepSummary"
+        },
+        "fields": {
+          "$ref": "#/definitions/IRequiredStepFields"
+        },
+        "sections": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessSection"
+          }
+        },
+        "comments": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequiredStepComment"
+          }
+        },
+        "wasPreviouslyRejected": {
+          "type": "boolean"
+        },
+        "wasSubmittedWithComment": {
+          "type": "boolean"
+        }
+      }
+    },
+    "RequiredStepSummary": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "maxLength": 500,
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "uniqueIdentifier": {
+          "type": "string"
+        },
+        "guidanceNotes": {
+          "maxLength": 500,
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "schemaId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "schemaVersionId": {
+          "pattern": "^[a-fA-F0-9]*$",
+          "type": "string"
+        },
+        "schemaStepIndex": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "processInstanceId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "previousStepId": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "schemaTitle": {
+          "maxLength": 500,
+          "type": "string"
+        },
+        "commentaryIsPublic": {
+          "type": "boolean"
+        },
+        "isLastStep": {
+          "type": "boolean"
+        }
+      }
+    },
+    "IRequiredStepFields": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TargetField"
+          }
+        },
+        "fulfilled": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FulfilledField"
+          }
+        }
+      }
+    },
+    "RequiredStepComment": {
+      "type": "object",
+      "properties": {
+        "sendingActorName": {
+          "type": "string"
+        },
+        "receivingActorName": {
+          "type": "string"
+        },
+        "commentText": {
+          "type": "string"
+        },
+        "isReceivedComment": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TargetField": {
+      "type": "object",
+      "properties": {
+        "schemaField": {
+          "$ref": "#/definitions/ProcessField"
+        },
+        "mostRecentValue": {
+          "type": "string"
+        },
+        "mostRecentlyRejectedValue": {
+          "type": "string"
+        }
+      }
+    },
+    "FulfilledField": {
+      "required": [
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "label": {
+          "maxLength": 500,
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "type": {
+          "maxLength": 50,
+          "minLength": 0,
+          "pattern": "[a-zA-Z0-9]*",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 1000,
+          "minLength": 0,
+          "type": "string"
+        },
+        "verificationUrl": {
+          "maxLength": 1000,
+          "minLength": 0,
+          "type": "string"
+        },
+        "help": {
+          "maxLength": 500,
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        }
+      }
+    },
+    "StepFulfillment": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "maxLength": 500,
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldValuePair"
+          }
+        },
+        "stepComment": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "fields": [
+          {
+            "id": "7e61653a-caf2-4310-905b-293707ccb710",
+            "value": "I am a field value",
+            "verification_url": "https://i-will-verofy-you/transactions/1ad814bd9b903bb874ebd151b65e2583d88934ce781c29dfd00962d134067ba7"
+          }
+        ],
+        "stepComment": "I am a step comment"
+      }
+    },
+    "StepRejection": {
+      "type": "object",
+      "properties": {
+        "stepComment": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "stepComment": "I reject this step"
+      }
+    },
+    "TransactionReport": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "$ref": "#/definitions/SiccarTransactionSummary"
+        },
+        "nextTransactionId": {
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/definitions/TransactionReportPayload"
+        },
+        "stepComments": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionReportStepComment"
+          }
+        }
+      }
+    },
+    "SiccarTransactionSummary": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "id": {
+          "pattern": "^[a-fA-F0-9]*$",
+          "type": "string"
+        },
+        "sender": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "recipient": {
+          "maxLength": 36,
+          "minLength": 36,
+          "pattern": "[a-fA-F0-9-]*",
+          "type": "string"
+        },
+        "previous": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "previousDataTxId": {
+          "type": "string",
+          "readOnly": true
+        },
+        "isCoinbase": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TransactionReportPayload": {
+      "type": "object",
+      "properties": {
+        "public": {
+          "$ref": "#/definitions/TransactionReportPublicPayload"
+        },
+        "private": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionReportPrivatePayload"
+          }
+        }
+      }
+    },
+    "TransactionReportStepComment": {
+      "type": "object",
+      "properties": {
+        "sendingActorName": {
+          "type": "string"
+        },
+        "receivingActorName": {
+          "type": "string"
+        },
+        "commentText": {
+          "type": "string"
+        },
+        "isDecrypted": {
+          "type": "boolean"
+        },
+        "rawData": {
+          "type": "string"
+        },
+        "isPublicComment": {
+          "type": "boolean"
+        },
+        "timestamp": {
+          "format": "int64",
+          "type": "integer"
+        }
+      }
+    },
+    "TransactionReportPublicPayload": {
+      "type": "object",
+      "properties": {
+        "originalJson": {
+          "type": "string"
+        },
+        "fields": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionReportField"
+          }
+        }
+      }
+    },
+    "TransactionReportPrivatePayload": {
+      "type": "object",
+      "properties": {
+        "actorId": {
+          "type": "string"
+        },
+        "actorName": {
+          "type": "string"
+        },
+        "originalPayloads": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionReportField"
+          }
+        },
+        "isDecrypted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TransactionReportField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiLanguageLabel"
+          }
+        },
+        "type": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "type": "integer"
+        },
+        "value": {
+          "type": "string"
+        },
+        "verificationUrl": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "apiKey",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "tags": []
+}
