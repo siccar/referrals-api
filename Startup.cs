@@ -133,19 +133,17 @@ namespace OpenReferrals
                 {
                     Version = "v1",
                     Title = "Open Referrals API(Cast Project)",
-                    Description = "Allows a user to manage a register",
+                    Description = "Allows users to query Orgs, Services and Locations. Data can be added easily using the related OpenReferralUI project to sign up and add data.",
                     Contact = new OpenApiContact
                     {
-                        Name = "Siccar",
-                        Email = "info@siccar.net",
-                        Url = new Uri("https://www.siccar.net/"),
+                        Name = "Catalyst",
+                        Email = "support@wearecast.org.uk",
+                        Url = new Uri("https://www.thecatalyst.org.uk/"),
                     },
                 });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+                    Description = @"Note that a token can only be created via the correct AzureB2C tenant. JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below. Example: 'Bearer 12345abcdef'",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,

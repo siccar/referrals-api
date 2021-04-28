@@ -1,6 +1,6 @@
 
 # Open Referrals (OR)
-This repo contains the source code for the Open Referrals project API.
+This repo contains the source code for the Open Referrals API project.
 
 The OpenReferralApi uses the OpenReferral standards and allows anyone to search query Services, Organisations and Locations.
 There are other controllers on the API which allow OpenReferralUI, the frontend of the OR project,
@@ -16,7 +16,7 @@ This will save the data in an Azure CosmosDB and an AzureSearchService.
 This Project requires the use of an Azure AD B2C tenant to store user credentials and 
 and to do authentication.  
 
-## Prerequisites
+## Prerequisites / Dependencies
  - Azure B2C Tenant
  - Access to Azure resources i.e CosmosDB, AzureSearchService, AppServices
  - Siccar (Only if you require to store data in a distributed ledger), this will need to be agreed and setup by the Siccar team.
@@ -59,3 +59,7 @@ This project can easily deployed using VS2019
  - Create a new pipeline called OpenReferralAPI and target the azure-pipelines.yml
  - Create a release which targets the OpenReferralAPI artifact and targets and app service.
  - Setup triggers or manually create a build and then release to the app service.
+
+ ## Feedback
+Issues can be created against the Github repository 
+ToDo Add in link to Github repo
