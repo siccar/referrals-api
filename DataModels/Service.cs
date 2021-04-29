@@ -20,7 +20,7 @@ namespace OpenReferrals.DataModels
         [Required]
         public string Id { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name must be populated")]
-        [StringLength(200, ErrorMessage = "Name can only be 200 chars long.")]
+        [StringLength(100, ErrorMessage = "Name can only be 100 chars long.")]
         public string Name { get; set; }
         public string OrganizationId { get; set; }
         public IEnumerable<RegularSchedule> Regular_Schedules { get; set; }
