@@ -23,7 +23,7 @@ namespace OpenReferrals.Connectors.LocationSearchConnector.ServiceClients
             _postcodeServiceClient = postcodeServiceClient;
         }
 
-        public void AddLocation(Location location)
+        public void AddOrUpdateLocation(Location location)
         {
             // The lat and long of the position Class need to be reversed to get them stored correctly
             var position = new Position(location.Longitude, location.Latitude);
