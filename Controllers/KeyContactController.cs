@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 namespace OpenReferrals.Controllers
 {
     [ApiController]
-    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     [Route("[controller]")]
     public class KeyContactController : ControllerBase

@@ -53,12 +53,12 @@ namespace OpenReferrals.Controllers
         /// <summary>
         /// Get All Services
         /// </summary>
-        /// <param name="postcode">Use text to perform a keyword search on services. This performs a full text search on the service title.</param>
-        /// <param name="text">The postcode of the person who wishes to use the service. In order to find services that are within a reasonable distance.</param>
+        /// <param name="text">Use text to perform a keyword search on services. This performs a full text search on the service title.</param>
+        /// <param name="postcode">The postcode of the person who wishes to use the service. In order to find services that are within a reasonable distance.</param>
         /// <param name="proximity">The distance in metres that the person is willing to travel from the target postcode.</param>
         /// <returns>A <see cref="List{Service}"/>Returns all services based on input parameters</returns>
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions, string postcode = null, double? proximity = null, string text = null)
+        public async Task<IActionResult> Get([FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions, string postcode = null, double? proximity = 5, string text = null)
         {
             var services = _serRepository.GetAll();
 
@@ -137,44 +137,6 @@ namespace OpenReferrals.Controllers
                 await _serRepository.UpdateOne(updatedService);
                 return Ok(updatedService);
             }
-        }
-
-        [HttpGet]
-        [Route("{id}/validate")]
-        public string Validate(string id)
-        {
-            ////what is meant to return? ask away
-            throw new NotImplementedException();
-        }
-
-        [HttpPost]
-        [Route("validate")]
-        public string ValidateJsonService(string id)
-        {
-            //what is meant to return? ask away
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
-        [Route("richness")]
-        public async Task<IActionResult> GetRichnessServicesSelection()
-        {
-            throw new NotImplementedException(); //todo: find out what the selection is based on
-        }
-
-        [HttpGet]
-        [Route("{id}/richness")]
-        public async Task<IActionResult> GetRichnessSingleService()
-        {
-            throw new NotImplementedException(); //todo: find out what this is under the proper data models
-        }
-
-        [HttpPost]
-        [Route("richness")]
-        public string RichnessJsonService(string id)
-        {
-            //what is meant to return? ask away
-            throw new NotImplementedException();
         }
     }
 }

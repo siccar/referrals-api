@@ -791,156 +791,6 @@
           }
         }
       }
-    },
-    "/Services/{id}/validate": {
-      "get": {
-        "tags": [
-          "Services"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Services/validate": {
-      "post": {
-        "tags": [
-          "Services"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Services/richness": {
-      "get": {
-        "tags": [
-          "Services"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Services"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Services/{id}/richness": {
-      "get": {
-        "tags": [
-          "Services"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -1013,16 +863,23 @@
       "Location": {
         "required": [
           "id",
+          "isVulnerable",
           "name"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isVulnerable": {
+            "type": "boolean"
+          },
           "description": {
             "type": "string",
             "nullable": true
-          },
-          "id": {
-            "type": "string"
           },
           "latitude": {
             "type": "number",
@@ -1031,9 +888,6 @@
           "longitude": {
             "type": "number",
             "format": "double"
-          },
-          "name": {
-            "type": "string"
           },
           "physical_Addresses": {
             "type": "array",
@@ -1063,7 +917,7 @@
             "type": "string"
           },
           "name": {
-            "maxLength": 50,
+            "maxLength": 100,
             "minLength": 0,
             "type": "string"
           },
@@ -1201,7 +1055,7 @@
             "type": "string"
           },
           "name": {
-            "maxLength": 200,
+            "maxLength": 100,
             "minLength": 0,
             "type": "string"
           },
@@ -1258,7 +1112,7 @@
     "securitySchemes": {
       "Bearer": {
         "type": "apiKey",
-        "description": "JWT Authorization header using the Bearer scheme. \\r\\n\\r\\n \r\n                      Enter 'Bearer' [space] and then your token in the text input below.\r\n                      \\r\\n\\r\\nExample: 'Bearer 12345abcdef'",
+        "description": "Note that a token can only be created via the correct AzureB2C tenant. JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below. Example: 'Bearer 12345abcdef'",
         "name": "Authorization",
         "in": "header"
       }

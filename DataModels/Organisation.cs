@@ -20,6 +20,7 @@ namespace OpenReferrals.DataModels
         [StringLength(100, ErrorMessage = "Name can only be 100 chars long.")]
         public string Name { get; set; }
         public int CharityNumber { get; set; }
+        //TODO: Currently ServiceIds are unused, they should be implemented to allow multiple ways to retrieve data
         public IEnumerable<string> ServicesIds { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "URL must be populated")]
         [Url(ErrorMessage = "URL must be valid")]
