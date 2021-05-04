@@ -24,8 +24,6 @@ and to do authentication.
 ## Source Code
 This project uses ASP.Net Core and is written in C#
 
-## Getting started Locally
-
 ### Setup Azure Resources
 - Create an OpenReferralAPI app registration and copy the app id.
 - Create a client secret and copy it down
@@ -34,6 +32,8 @@ This project uses ASP.Net Core and is written in C#
 - Create an AzureSearchService and index (copy the contents of the azuresearch.json file and replace it with the fields in the index definition)
 - Create a SendGrid account and model a dynamic email template, it takes in parameters: OpenReferralAppUrl(baseUrl of the frontendapp), OrganisationName and UserName
 - Get the details of the Sendgrid account API key and template ID.
+
+## Getting started Locally
 
 ### Local machine setup
 - Clone the repository
