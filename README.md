@@ -2,7 +2,7 @@
 # Open Referrals API (OR)
 This repo contains the source code for the Open Referrals API project.
 
-The OpenReferralApi uses the OpenReferral standards and allows anyone to search query Services, Organisations and Locations.
+The OpenReferralApi uses the [OpenReferral standards](https://openreferraluk.org/) and allows anyone to search query Services, Organisations and Locations.
 There are other controllers on the API which allow OpenReferralUI, the frontend of the OR project,
 to meet all the project requirements.
 Another aspect of this project demonstrates that Siccar, a distributed ledger platform,
