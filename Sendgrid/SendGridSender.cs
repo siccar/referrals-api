@@ -13,15 +13,13 @@ namespace OpenReferrals.Sendgrid
     public class SendGridSender : ISendGridSender
     {
         private string _apiKey;
-        private string _templateId;
-        private string _baseAddress;
-        private IHttpContextAccessor _httpContextAccessor; 
+        private SendGridSettings _settings;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public SendGridSender(SendGridSettings sendGridSettings, IHttpContextAccessor httpContextAccessor)
         {
             _apiKey = sendGridSettings.ApiKey;
-            _templateId = sendGridSettings.TemplateId;
-            _baseAddress = sendGridSettings.BaseAddress;
+            _settings = sendGridSettings;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -30,24 +28,40 @@ namespace OpenReferrals.Sendgrid
 
             var templateParameters = new TemplateParameters
             {
-                OpenReferralAppUrl = _baseAddress + "myrequests",
+                OpenReferralAppUrl = _settings.BaseAddress + "myrequests",
                 OrganisationName = orgName,
                 UserName = JWTAttributesService.GetEmail(_httpContextAccessor.HttpContext.Request),
-        };
+            };
             var client = new SendGridClient(_apiKey);
-            var msg = MailHelper.CreateSingleTemplateEmail(from, to, _templateId, templateParameters);
+            var msg = MailHelper.CreateSingleTemplateEmail(from, to, _settings.TemplateId, templateParameters);
             var response = await client.SendEmailAsync(msg);
         }
 
-        public async Task SendSingleTemplateEmailToMultiple(EmailAddress from, List<EmailAddress> to)
+        public async Task SendOrgRequestEmail(EmailAddress from, EmailAddress to, string orgName)
         {
+
             var templateParameters = new TemplateParameters
             {
-                
-                OpenReferralAppUrl = _baseAddress + "myrequests",
+                OpenReferralAppUrl = _settings.BaseAddress + "myrequests",
+                OrganisationName = orgName,
+                UserName = JWTAttributesService.GetEmail(_httpContextAccessor.HttpContext.Request),
             };
             var client = new SendGridClient(_apiKey);
-            var msg = MailHelper.CreateSingleTemplateEmailToMultipleRecipients(from, to, _templateId, templateParameters);
+            var msg = MailHelper.CreateSingleTemplateEmail(from, to, _settings.OrgPendingTemplate, templateParameters);
+            var response = await client.SendEmailAsync(msg);
+        }
+
+        public async Task SendOrgApprovedEmail(EmailAddress from, EmailAddress to, string orgName, string orgId)
+        {
+
+            var templateParameters = new TemplateParameters
+            {
+                OpenReferralAppUrl = _settings.BaseAddress + $"manage-organisation/{orgId}",
+                OrganisationName = orgName,
+                UserName = JWTAttributesService.GetEmail(_httpContextAccessor.HttpContext.Request),
+            };
+            var client = new SendGridClient(_apiKey);
+            var msg = MailHelper.CreateSingleTemplateEmail(from, to, _settings.OrgApprovedTemplate, templateParameters);
             var response = await client.SendEmailAsync(msg);
         }
     }
@@ -58,4 +72,4 @@ namespace OpenReferrals.Sendgrid
         public string UserName { get; set; }
         public string OrganisationName { get; set; }
     }
-}   
+}

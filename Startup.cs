@@ -25,6 +25,7 @@ using OpenReferrals.Connectors.LocationSearchConnector.ServiceClients;
 using OpenReferrals.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using OpenReferrals.Repositories.OpenReferral.PendingOrgs;
 
 namespace OpenReferrals
 {
@@ -55,6 +56,7 @@ namespace OpenReferrals
 
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddTransient<IOrganisationRepository, OrganisationRepository>();
+            services.AddTransient<IPendingOrganisationRepository, PendingOrganisationRepository>();
             services.AddTransient<IKeyContactRepository, KeyContactRepository>();
             services.AddTransient<IOrganisationMemberRepository, OrganisationMemberRepository>();
             services.AddTransient<IPlaylistRepository, PlaylistRepository>();
