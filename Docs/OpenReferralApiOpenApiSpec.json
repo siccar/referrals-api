@@ -613,6 +613,113 @@
         }
       }
     },
+    "/PendingOrganizations": {
+      "get": {
+        "tags": [
+          "PendingOrganizations"
+        ],
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PendingOrganizations"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PendingOrganisation"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PendingOrganisation"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PendingOrganisation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/PendingOrganizations/{id}": {
+      "post": {
+        "tags": [
+          "PendingOrganizations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "PendingOrganizations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/PendingOrganizations/has-pending-org": {
+      "get": {
+        "tags": [
+          "PendingOrganizations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/Playlist": {
       "get": {
         "tags": [
@@ -664,10 +771,10 @@
           {
             "name": "postcode",
             "in": "query",
-            "description": "Use text to perform a keyword search on services. This performs a full text search on the service title.",
+            "description": "The postcode of the person who wishes to use the service. In order to find services that are within a reasonable distance.",
             "schema": {
               "type": "string",
-              "description": "Use text to perform a keyword search on services. This performs a full text search on the service title.",
+              "description": "The postcode of the person who wishes to use the service. In order to find services that are within a reasonable distance.",
               "nullable": true
             }
           },
@@ -679,16 +786,17 @@
               "type": "number",
               "description": "The distance in metres that the person is willing to travel from the target postcode.",
               "format": "double",
+              "default": 5,
               "nullable": true
             }
           },
           {
             "name": "text",
             "in": "query",
-            "description": "The postcode of the person who wishes to use the service. In order to find services that are within a reasonable distance.",
+            "description": "Use text to perform a keyword search on services. This performs a full text search on the service title.",
             "schema": {
               "type": "string",
-              "description": "The postcode of the person who wishes to use the service. In order to find services that are within a reasonable distance.",
+              "description": "Use text to perform a keyword search on services. This performs a full text search on the service title.",
               "nullable": true
             }
           }
@@ -935,6 +1043,54 @@
           "url": {
             "type": "string",
             "format": "uri"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PendingOrganisation": {
+        "required": [
+          "description",
+          "id",
+          "name",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "charityNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "servicesIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
+          "userEmail": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
